@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, Guild } = require('discord.js');
 const { addRow } = require(`../events/databaseManager.js`);
+const { encryptData, decryptData } = require('../libs/encryption.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -30,15 +31,26 @@ module.exports = {
             .setDescription('Coordinate of your snitch')
         ),
 	async execute(interaction) {
+        var message = '';
+
         var typeTarget = interaction.options.getString('type');
         var nameTarget = interaction.options.getString('name');
         var coordTarget = interaction.options.getString('coordinate');
         var expirationTarget = interaction.options.getString('expiration');
-        var message = '';
-
         let submissionTimestamp = Math.floor(Date.now() / 1000);
 
-        let newRow = await addRow(interaction.member.user.id, interaction.guild.id, typeTarget, nameTarget, coordTarget, submissionTimestamp, expirationTarget)
+        // Hashes strings
+        var encryptedUserId = encryptData(interaction.member.user.id);
+        var encryptedServerId = encryptData(interaction.guild.id);
+        var encryptedType = encryptData(typeTarget);
+        var encryptedName = encryptData(nameTarget);
+        var encryptedCoord = encryptData(coordTarget);
+        var encryptedExpire = encryptData(expirationTarget);
+        var encryptedSubmit = encryptData(submissionTimestamp);
+
+        console.log(decryptData(encryptedName));
+
+        let newRow = await addRow(encryptedUserId, encryptedServerId, encryptedType, encryptedName, encryptedCoord, encryptedExpire, encryptedSubmit);
 
         if (newRow == true) {
             message = `Your reminder for ${nameTarget} ${typeTarget} is created!`;
