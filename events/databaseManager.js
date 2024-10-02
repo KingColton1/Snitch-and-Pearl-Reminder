@@ -70,7 +70,7 @@ async function addRow(tagUserId, tagServerId, tagTypeName, tagDesc, tagCoord, ta
             expirationTimestamp: tagExpiration
         });
 
-        return row;
+        return true;
     }
     catch (error) {
         return error;
