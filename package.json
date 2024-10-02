@@ -1,0 +1,22 @@
+{
+  "name": "snitch-and-pearl-reminder",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kingcolton1",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@discordjs/builders": "^1.9.0",
+    "@discordjs/rest": "^2.4.0",
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.5",
+    "pg": "^8.13.0",
+    "sequelize": "^6.37.3",
+    "snitch-and-pearl-reminder": "file:",
+    "snitch-reminder": "file:",
+    "sqlite3": "^5.1.7"
+  }
+}
