@@ -54,7 +54,7 @@ async function createTemplateTable(dbConn) {
         }
     });
 
-    UserReminder.sync();
+    userReminderTable.sync();
 }
 
 async function addRow(tagUserId, tagServerId, tagTypeName, tagDesc, tagCoord, tagSubmission, tagExpiration) {
