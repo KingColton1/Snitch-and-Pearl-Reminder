@@ -1,8 +1,9 @@
 const sequelize = require('sequelize');
 const { storageType, dbDatabase, dbHost, dbPort, dbUser, dbPassword, sqliteFileName, sqliteDatabase, sqliteHost, sqliteUser, sqlitePassword } = require('../libs/config.js');
+let dbConn = null;
+let userReminderTable = null;
 
-function connectDatabase() {
-    let dbConn = null;
+async function connectDatabase() {
     if (storageType == "sqlite") {
         dbConn = new sequelize(sqliteDatabase, sqliteUser, sqlitePassword, {
             host: sqliteHost,
@@ -22,13 +23,13 @@ function connectDatabase() {
         })
     }
 
-    createTemplateTable(dbConn);
+    await createTemplateTable(dbConn);
 }
 
-function createTemplateTable(dbConn) {
+async function createTemplateTable(dbConn) {
     // Create a template table on startup. With Sequelize, it is virtually supported on any database engines.
     // Same as "CREATE TABLE" command
-    const UserReminder = dbConn.define('UserReminder', {
+    userReminderTable = dbConn.define('UserReminder', {
         userId: {
             type: sequelize.INTEGER,
             allowNull: false
@@ -56,6 +57,98 @@ function createTemplateTable(dbConn) {
     UserReminder.sync();
 }
 
+async function addRow(tagUserId, tagServerId, tagTypeName, tagDesc, tagCoord, tagSubmission, tagExpiration) {
+    try {
+        // Equivalent to: INSERT INTO UserReminder (userId, serverId, typeName) values (?, ?, ?);
+        const row = await userReminderTable.create({
+            userId: tagUserId,
+            serverId: tagServerId,
+            typeName: tagTypeName,
+            description: tagDesc,
+            coordinate: tagCoord,
+            submissionTimestamp: tagSubmission,
+            expirationTimestamp: tagExpiration
+        });
+
+        return row;
+    }
+    catch (error) {
+        return error;
+    }
+}
+
+async function selectRow(tagUserId, tagDesc, tagCoord) {
+    const row = null;
+
+    // Equivalent to: SELECT * FROM UserReminder WHERE description = 'tagDesc' LIMIT 1;
+    if (tagDesc) {
+        row = await userReminderTable.findOne({ where: { description: tagDesc } });
+    }
+    else if (tagCoord) {
+        row = await userReminderTable.findOne({ where: { coordinate: tagCoord } });
+    }
+
+    if (row) {
+        // Equivalent to: UPDATE UserReminder SET usage_count = usage_count + 1 WHERE description = 'tagDesc';
+        row.increment('usage_count');
+
+        return row.get('expirationTimestamp')
+    }
+    else {
+        return false;
+    }
+}
+
+async function updateRow(tagUserId, tagDesc, tagCoord, tagTypeName) {
+    const row = null;
+
+    // Equivalent to: UPDATE UserReminder (typeName) values (?) WHERE description='?';
+    if (tagDesc) {
+        row = await userReminderTable.update({ typeName: tagTypeName }, { where: { description: tagDesc } });
+    }
+    else if (tagCoord) {
+        row = await userReminderTable.update({ typeName: tagTypeName }, { where: { coordinate: tagCoord } });
+    }
+
+    if (row > 0) {
+		return true;
+	}
+    else {
+        return false;
+    }
+}
+
+async function listAllRows(tagUserId) {
+    const row = await userReminderTable.findAll({ attributes: ['userId'] });
+    const rowString = row.map(t => t.name).join(', ') || 'No data set.';
+
+    return rowString;
+}
+
+async function deleteRow(tagUserId, tagDesc, tagCoord) {
+    const row = null;
+
+    // Equivalent to: DELETE from UserReminder WHERE description = ?;
+    if (tagDesc) {
+        row = await userReminderTable.destroy({ where: { description: tagDesc } });
+    }
+    else if (tagCoord) {
+        row = await userReminderTable.destroy({ where: { coordinate: tagCoord } });
+    }
+
+    if (!row) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
 module.exports = {
     connectDatabase,
+    addRow,
+    selectRow,
+    updateRow,
+    listAllRows,
+    deleteRow
 }

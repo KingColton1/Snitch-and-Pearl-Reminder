@@ -6,7 +6,7 @@ module.exports = {
     once: true,
     async execute(client) {
         // Connect to the database and create a template table
-        connectDatabase();
+        await connectDatabase();
         console.log(`Logged in as ${client.user.tag}`);
     },
 }
