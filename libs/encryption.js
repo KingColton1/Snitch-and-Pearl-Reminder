@@ -23,17 +23,14 @@ function encryptData(data) {
 }
 
 function decryptData(data) {
-   console.log(data);
     var dataParts = data.split(':');
     var iv = Buffer.from(dataParts.shift(), 'hex');
     var encryptedData = Buffer.from(dataParts.join(':'), 'hex');
     var decipher = crypto.createDecipheriv(algorithm, key, iv);
     var decrypted = decipher.update(encryptedData);
-    decrypted = Buffer.concat([decrypted, decipher.final()]).toString();
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
 
-    console.log(decrypted);
-
-    return decrypted;
+    return decrypted.toString();
 }
 
 module.exports = {

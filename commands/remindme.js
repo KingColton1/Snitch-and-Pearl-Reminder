@@ -48,7 +48,7 @@ module.exports = {
         var encryptedExpire = encryptData(expirationTarget);
         var encryptedSubmit = encryptData(submissionTimestamp);
 
-        console.log(decryptData(encryptedName));
+        console.log(decryptData("testwart")); // test
 
         let newRow = await addRow(encryptedUserId, encryptedServerId, encryptedType, encryptedName, encryptedCoord, encryptedExpire, encryptedSubmit);
 
