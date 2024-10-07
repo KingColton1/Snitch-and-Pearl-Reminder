@@ -1,5 +1,4 @@
 const crypto = require('crypto');
-const { discordToken, discordClientId } = require('../libs/config.js');
 
 const algorithm = 'aes-256-gcm';
 
