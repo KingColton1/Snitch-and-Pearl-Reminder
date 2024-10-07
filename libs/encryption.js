@@ -22,10 +22,10 @@ function decryptData(data) {
     var key = Buffer.from(dataParts[0], 'base64');
     var iv = Buffer.from(dataParts[1], 'base64');
     var encryptedData = dataParts[2];
-    var tag = dataParts[3];
+    var tag = Buffer.from(dataParts[3], 'base64')
 
     var decipher = crypto.createDecipheriv(algorithm, key, iv);
-    decipher.setAuthTag(Buffer.from(tag, 'base64'));
+    decipher.setAuthTag(tag);
 
     var decrypted = decipher.update(encryptedData, 'base64', 'utf8');
     decrypted += decipher.final('utf8');
