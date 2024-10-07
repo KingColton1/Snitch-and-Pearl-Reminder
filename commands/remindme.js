@@ -33,13 +33,14 @@ module.exports = {
 	async execute(interaction) {
         var message = '';
 
+        // Get something from user's inputs
         var typeTarget = interaction.options.getString('type');
         var nameTarget = interaction.options.getString('name');
         var coordTarget = interaction.options.getString('coordinate');
         var expirationTarget = interaction.options.getString('expiration');
         let submissionTimestamp = Math.floor(Date.now() / 1000);
 
-        // Hashes strings
+        // Encrypt inputs
         var encryptedUserId = encryptData(interaction.member.user.id);
         var encryptedServerId = encryptData(interaction.guild.id);
         var encryptedType = encryptData(typeTarget);
@@ -48,6 +49,7 @@ module.exports = {
         var encryptedExpire = encryptData(expirationTarget);
         var encryptedSubmit = encryptData(submissionTimestamp);
 
+        // Save them to the database
         let newRow = await addRow(encryptedUserId, encryptedServerId, encryptedType, encryptedName, encryptedCoord, encryptedExpire, encryptedSubmit);
 
         if (newRow == true) {
