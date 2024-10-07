@@ -9,8 +9,6 @@ async function connectDatabase() {
             host: sqliteHost,
             dialect: storageType,
             logging: false,
-            
-            // SQLite only
             storage: sqliteFileName
         })
     }
