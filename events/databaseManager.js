@@ -118,11 +118,11 @@ async function updateRow(tagUserId, tagDesc, tagCoord, tagTypeName) {
     }
 }
 
-async function listAllRows(tagUserId) {
-    const row = await userReminderTable.findAll({ attributes: ['userId'] });
-    const rowString = row.map(t => t.name).join(', ') || 'No data set.';
+async function listAllRows() {
+    const row = await userReminderTable.findAll();
+    //const rowString = row.map(t => t.name).join(', ') || 'No data set.';
 
-    return rowString;
+    return row;
 }
 
 async function deleteRow(tagUserId, tagDesc, tagCoord) {

@@ -1,36 +1,37 @@
 const crypto = require('crypto');
 const { discordToken, discordClientId } = require('../libs/config.js');
 
-const algorithm = 'aes-256-ctr';
-
-const key = crypto
-  .createHash('sha512')
-  .update(discordToken)
-  .digest('hex')
-  .substring(0, 32)
+const algorithm = 'aes-256-gcm';
 
 function encryptData(data) {
     if (data == null) {
         return;
     }
 
-    var iv = crypto.randomBytes(16);
-    var cipher = crypto.createCipheriv(algorithm, key, iv);
-    var encrypted = cipher.update(toString(data));
-    encrypted = Buffer.concat([encrypted, cipher.final()]);
+    var key = crypto.randomBytes(32).toString('base64');
+    var iv = crypto.randomBytes(16).toString('base64');
+    var cipher = crypto.createCipheriv(algorithm, Buffer.from(key, 'base64'), Buffer.from(iv, 'base64'));
+    var encrypted = cipher.update(data.toString(), 'utf8', 'base64');
+    encrypted += cipher.final('base64');
+    const tag = cipher.getAuthTag().toString('base64');
 
-    return iv.toString('hex') + ':' + encrypted.toString('hex');
+    return key + ':' + iv + ':' + encrypted + ':' + tag;
 }
 
 function decryptData(data) {
     var dataParts = data.split(':');
-    var iv = Buffer.from(dataParts.shift(), 'hex');
-    var encryptedData = Buffer.from(dataParts.join(':'), 'hex');
-    var decipher = crypto.createDecipheriv(algorithm, key, iv);
-    var decrypted = decipher.update(encryptedData);
-    decrypted = Buffer.concat([decrypted, decipher.final()]);
+    var key = Buffer.from(dataParts[0], 'base64');
+    var iv = Buffer.from(dataParts[1], 'base64');
+    var encryptedData = dataParts[2];
+    var tag = dataParts[3];
 
-    return decrypted.toString();
+    var decipher = crypto.createDecipheriv(algorithm, key, iv);
+    decipher.setAuthTag(Buffer.from(tag, 'base64'));
+
+    var decrypted = decipher.update(encryptedData, 'base64', 'utf8');
+    decrypted += decipher.final('utf8');
+
+    return decrypted;
 }
 
 module.exports = {

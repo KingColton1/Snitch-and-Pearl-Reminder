@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, Guild } = require('discord.js');
 const { addRow } = require(`../events/databaseManager.js`);
-const { encryptData, decryptData } = require('../libs/encryption.js');
+const { encryptData } = require('../libs/encryption.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -47,8 +47,6 @@ module.exports = {
         var encryptedCoord = encryptData(coordTarget);
         var encryptedExpire = encryptData(expirationTarget);
         var encryptedSubmit = encryptData(submissionTimestamp);
-
-        console.log(decryptData("testwart")); // test
 
         let newRow = await addRow(encryptedUserId, encryptedServerId, encryptedType, encryptedName, encryptedCoord, encryptedExpire, encryptedSubmit);
 
