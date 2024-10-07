@@ -2,6 +2,8 @@
 
 Snitch and Pearl Reminder Bot, or simply Reminder Bot is a self hostable bot designed to ensure your snitches and pearls are maintained with timely manner. Do note that the bot's timing for snitch and pearl may be slightly inaccurate because you create reminders manually. It can be 5 minutes later than the actual expiration time for a snitch or pearl. Be sure to time it right or at least accurately!
 
+This bot designed for any Civ servers such as CivMC that is using mainline's pearl and snitch plugins. Probably work for spin-off Civ servers like Civ+.
+
 # Self Host Instruction
 This bot requires two things; a server (can be your own computer, a virtual private server, or dedicated server) and a database if you prefer Postgres, MySQL, MariaDB, or MSSQL. However if you prefer SQLite over other databases, you do not need to host your own database.
 
