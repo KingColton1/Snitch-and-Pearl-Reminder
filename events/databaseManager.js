@@ -38,10 +38,10 @@ async function createTemplateTable(dbConn) {
         },
         typeName: sequelize.STRING,
         description: sequelize.STRING,
-        coordinate: {
-            type: sequelize.STRING,
-            defaultValue: "0"
-        },
+        coordinate: sequelize.STRING,
+        schedule: sequelize.STRING,
+        isDMEnabled: sequelize.BOOLEAN,
+        channelId: sequelize.INTEGER,
         submissionTimestamp: {
             type: sequelize.INTEGER,
             defaultValue: 0
@@ -55,7 +55,7 @@ async function createTemplateTable(dbConn) {
     userReminderTable.sync();
 }
 
-async function addRow(tagUserId, tagServerId, tagTypeName, tagDesc, tagCoord, tagSubmission, tagExpiration) {
+async function addRow(tagUserId, tagServerId, tagTypeName, tagDesc, tagCoord, tagSchedule, tagDM, tagChannel, tagSubmission, tagExpiration) {
     try {
         // Equivalent to: INSERT INTO UserReminder (userId, serverId, typeName) values (?, ?, ?);
         const row = await userReminderTable.create({
@@ -64,6 +64,9 @@ async function addRow(tagUserId, tagServerId, tagTypeName, tagDesc, tagCoord, ta
             typeName: tagTypeName,
             description: tagDesc,
             coordinate: tagCoord,
+            schedule: tagSchedule,
+            isDMEnabled: tagDM,
+            channelId: tagChannel,
             submissionTimestamp: tagSubmission,
             expirationTimestamp: tagExpiration
         });

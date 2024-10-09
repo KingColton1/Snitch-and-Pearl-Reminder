@@ -1,13 +1,14 @@
-const { SlashCommandBuilder, Guild } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { listAllRows } = require(`../events/databaseManager.js`);
 const { decryptData } = require('../libs/encryption.js');
+const embedPage = require('../libs/embedPage.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('listreminders')
 		.setDescription('Show list of your reminders'),
 	async execute(interaction) {
-        var message = '';
+        const embeds = [];
         var list = [];
 
         // Decrypt test
@@ -18,11 +19,10 @@ module.exports = {
             list.push(decryptData(parsedJSON[key].description));
         }
 
-        message = list.toString();
+        for (var i = 0; i < list.length; i++) {
+            embeds.push(new EmbedBuilder().setDescription(`Snitch/Pearl Name: ${list[i]}`).setColor("Blurple"));
+        }
 
-        await interaction.reply({
-            content: message,
-            ephemeral: true
-        });
+        await embedPage(interaction, embeds)
     }
 };
