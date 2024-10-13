@@ -23,7 +23,12 @@ module.exports = {
         var JSONRow = JSON.stringify(listRows, null, 2);
         var parsedJSON = JSON.parse(JSONRow);
         for (const key in parsedJSON) {
-            list.push(decryptData(parsedJSON[key].description));
+            var decryptedUserId = decryptData(parsedJSON[key].userId);
+            var decryptedDesc = decryptData(parsedJSON[key].description);
+            
+            if (decryptedUserId === interaction.member.id) {
+                list.push(decryptedDesc);
+            }
         }
 
         for (var i = 0; i < Math.ceil(list.length / 5); i++) {
