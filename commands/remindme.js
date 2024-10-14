@@ -1,6 +1,7 @@
-const { SlashCommandBuilder, Guild } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { addRow } = require(`../events/databaseManager.js`);
 const { encryptData } = require('../libs/encryption.js');
+const { timeConverter, calculateSchedule } = require('../libs/timeConverter.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -97,9 +98,9 @@ module.exports = {
         // Get something from user's inputs
         var typeTarget = '';
         var nameTarget = '';
-        var coordTarget = '';
+        var coordTarget = "0,0,0";
         var scheduleTarget = '';
-        var dmTarget = '';
+        var dmTarget = true;
         var channelTarget = '';
         var expirationTarget = '';
         let submissionTimestamp = Math.floor(Date.now() / 1000);
@@ -108,18 +109,36 @@ module.exports = {
             typeTarget = "pearl";
             nameTarget = interaction.options.getString('name');
             scheduleTarget = interaction.options.getString('schedule-reminder');
-            dmTarget = interaction.options.getBoolean('dm') || true;
+            dmTarget = interaction.options.getBoolean('dm');
             channelTarget = interaction.options.getChannel('channel') || "0";
-            expirationTarget = interaction.options.getString('expiration');
+            expirationTarget = await timeConverter(interaction.options.getString('expiration'));
+
+            if (expirationTarget === false) {
+                return await interaction.reply({
+                    content: "There is a problem with expiration format, please follow DD/MM/YYYY HH:MM format. For example: 20/04/2025 15:20",
+                    ephemeral: true
+                });
+            }
+
+            scheduleTarget = await calculateSchedule(scheduleTarget, expirationTarget);
         }
         else if (interaction.options.getSubcommand() === 'snitch') {
             typeTarget = "snitch";
             nameTarget = interaction.options.getString('name');
-            coordTarget = interaction.options.getString('coordinate') || "0,0,0";
+            coordTarget = interaction.options.getString('coordinate');
             scheduleTarget = interaction.options.getString('schedule-reminder');
-            dmTarget = interaction.options.getBoolean('dm') || true;
+            dmTarget = interaction.options.getBoolean('dm');
             channelTarget = interaction.options.getChannel('channel') || "0";
-            expirationTarget = interaction.options.getString('expiration');
+            expirationTarget = await timeConverter(interaction.options.getString('expiration'));
+
+            if (expirationTarget === false) {
+                return await interaction.reply({
+                    content: "There is a problem with expiration format, please follow DD/MM/YYYY HH:MM format. For example: 20/04/2025 15:20",
+                    ephemeral: true
+                });
+            }
+
+            scheduleTarget = await calculateSchedule(scheduleTarget, expirationTarget);
         }
 
         // Encrypt inputs

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, Guild } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { listAllRows } = require(`../events/databaseManager.js`);
 const { decryptData } = require('../libs/encryption.js');
 
