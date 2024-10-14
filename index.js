@@ -58,7 +58,7 @@ const rest = new REST().setToken(discordToken);
 client.login(discordToken);
 
 // Run interval, passing client information
-cron.schedule('*/5 * * * *', async () => {
+cron.schedule('* * * * *', async () => {
     console.log('Checking for upcoming reminders...');
     await remindEvent(client);
 });
