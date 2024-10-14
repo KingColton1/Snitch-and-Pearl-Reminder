@@ -29,18 +29,19 @@ module.exports = {
             var decryptedUserId = decryptData(parsedJSON[key].userId);
             var decryptedDesc = decryptData(parsedJSON[key].description);
             var decryptedType = decryptData(parsedJSON[key].typeName);
+            var scheduleTime = decryptData(parsedJSON[key].schedule);
             var decryptedSubmit = decryptData(parsedJSON[key].submissionTimestamp);
             var decryptedExpire = decryptData(parsedJSON[key].expirationTimestamp);
             var decryptedCoord = decryptData(parsedJSON[key].coordinate);
 
             // If user's input matches a decrypted data, push everything related to a chosen row to list
             if (decryptedUserId === interaction.member.id && (decryptedDesc.toLowerCase() === nameTarget.toLowerCase() || decryptedCoord === coordTarget)) {
-                list.push(decryptedDesc, decryptedType, decryptedSubmit, decryptedExpire, decryptedCoord);
+                list.push(decryptedDesc, decryptedType, scheduleTime, decryptedSubmit, decryptedExpire, decryptedCoord);
             }
         }
 
         if ((list[0] != null && list[3] != null) || list[0] != null) {
-            message = "`" + list[0] + "` " + `${list[1]} is expiring in <t:${list[3]}:R>, you will be reminded (timestamp here)`;
+            message = "`" + list[0] + "` " + `${list[1]} is expiring in <t:${list[4]}:R>, you will be reminded <t:${list[2]}:R>`;
         }
         else {
             if (coordTarget && nameTarget) {

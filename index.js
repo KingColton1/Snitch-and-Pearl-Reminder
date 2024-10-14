@@ -1,7 +1,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const cron = require('node-cron');
 const { Client, Collection, Events, GatewayIntentBits, REST, Routes } = require('discord.js');
 const { discordToken, discordClientId } = require('./libs/config.js');
+const remindEvent = require('./events/remindEvent.js');
 
 const client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]});
 
@@ -54,3 +56,9 @@ const rest = new REST().setToken(discordToken);
 })();
 
 client.login(discordToken);
+
+// Run interval, passing client information
+cron.schedule('*/5 * * * *', async () => {
+    console.log('Checking for upcoming reminders...');
+    await remindEvent(client);
+});

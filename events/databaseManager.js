@@ -126,6 +126,18 @@ async function listAllRows() {
     return row;
 }
 
+async function listRowsInTimeRange(currentTime, nextCheckTime) {
+    // Fetch rows where schedule is between the current time and the next check time
+    const rows = await userReminderTable.findAll({
+        where: {
+            schedule: {
+                [sequelize.Op.between]: [currentTime, nextCheckTime]
+            }
+        }
+    });
+    return rows;
+}
+
 async function deleteRow(tagUserId, tagDesc, tagCoord) {
     const row = null;
 
@@ -151,5 +163,6 @@ module.exports = {
     selectRow,
     updateRow,
     listAllRows,
+    listRowsInTimeRange,
     deleteRow
 }
