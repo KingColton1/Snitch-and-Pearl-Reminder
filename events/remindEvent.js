@@ -36,12 +36,12 @@ module.exports = async (client) => {
         expireTime = decryptData(parsedJSON[row].expirationTimestamp);
         scheduleTime = decryptData(parsedJSON[row].schedule);
         isDMEnabled = decryptData(parsedJSON[row].isDMEnabled);
-        channelTarget = decryptData(parsedJSON[row].channelTarget);
+        //channelTarget = decryptData(parsedJSON[row].channelTarget);
 
         console.log(userId);
         console.log(scheduleTime + " | " + currentTime);
         
-        if (scheduleTime === currentTime && expireTime > currentTime) {
+        if (scheduleTime > currentTime && expireTime > currentTime) {
             const user = await client.users.fetch(userId).catch(() => null);
 
             console.log("On schedule time and not past expired time");
@@ -50,7 +50,8 @@ module.exports = async (client) => {
                 console.log(`trying to send message to ${user}...`);
 
                 // Calculate time remaining until the schedule time
-                const timeUntilReminder = (scheduleTime - currentTime) * 1000;
+                const timeUntilReminder = scheduleTime - currentTime;
+                console.log(timeUntilReminder);
 
                 if (typeName === "pearl") {
                     message = `${description}'s fuel is about to run out, be sure to refuel that pearl! Pearl's fuel will run out <t:${expireTime}:R>`;
@@ -60,7 +61,7 @@ module.exports = async (client) => {
                 }
 
                 if (isDMEnabled == true) {
-                    await scheduleReminder(client, userId, message, timeUntilReminder)
+                    await scheduleReminder(client, userId, message, timeUntilReminder);
                 }
                 else if (isDMEnabled == false) {
                     // TODO 3: send to a channel assigned by a user
