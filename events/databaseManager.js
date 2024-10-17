@@ -119,6 +119,22 @@ async function updateRow(tagUserId, tagDesc, tagCoord, tagTypeName) {
     }
 }
 
+async function updateTimeoutRow(tagDesc, tagTimeOutInterval) {
+    const row = null;
+
+    // Equivalent to: UPDATE UserReminder (isOnTimeOutInterval) values (?) WHERE description='?';
+    if (tagDesc) {
+        row = await userReminderTable.update({ isOnTimeOutInterval: tagTimeOutInterval }, { where: { description: tagDesc } });
+    }
+
+    if (row > 0) {
+		return true;
+	}
+    else {
+        return false;
+    }
+}
+
 async function listAllRows() {
     const row = await userReminderTable.findAll();
     //const rowString = row.map(t => t.name).join(', ') || 'No data set.';
@@ -150,6 +166,7 @@ module.exports = {
     addRow,
     selectRow,
     updateRow,
+    updateTimeoutRow,
     listAllRows,
     deleteRow
 }

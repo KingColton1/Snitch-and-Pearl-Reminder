@@ -18,6 +18,7 @@ function encryptData(data) {
 }
 
 function decryptData(data) {
+    if (!data) return;
     var dataParts = data.split(':');
     var key = Buffer.from(dataParts[0], 'base64');
     var iv = Buffer.from(dataParts[1], 'base64');

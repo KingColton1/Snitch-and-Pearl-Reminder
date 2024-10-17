@@ -2,23 +2,27 @@ const { listAllRows } = require(`../events/databaseManager.js`);
 const { decryptData } = require('../libs/encryption.js');
 const CacheManager = require('../libs/cacheManager.js');
 
-// TODO 1: Have this bot be able to remind on time even after bot's reboot.
-// TODO 2: Have this bot constantly check unix time and remind on time, without delay. No idea how to do this without using too much resources but will learn how.
-
 // IDEA 1: If bot is about to crash, immediately DM everyone who are attached to the bot's database stating that bot is crashed and need to be rebooted manually by the bot host.
 
 // Function to dynamically schedule reminders
-async function scheduleReminder(client, userId, message, delay) {
-    setTimeout(async () => {
+async function scheduleReminder(client, reminderKey, userId, message, delay) {
+    if (CacheManager.isTimeoutActive(reminderKey)) {
+        return;
+    }
+
+    const timeoutId = setTimeout(async () => {
         const user = await client.users.fetch(userId).catch(() => null);
         if (user) {
-            console.log(`Sending reminder to ${user.tag}`);
             user.send({ content: message });
         }
-    }, delay);
+        CacheManager.removeTimeout(reminderKey);
+        CacheManager.removeReminder(reminderKey);
+    }, delay * 1000);
+
+    CacheManager.cacheTimeout(reminderKey, timeoutId);
 }
 
-async function messageContent(client, userId, description, typeName, coordinate, expireTime, isDMEnabled, channelTarget, timeUntilReminder) {
+async function messageContent(client, reminderKey, userId, description, typeName, coordinate, expireTime, isDMEnabled, channelTarget, timeUntilReminder) {
     var message = '';
 
     if (typeName === "pearl") {
@@ -28,28 +32,28 @@ async function messageContent(client, userId, description, typeName, coordinate,
         message = `${description} snitch at ${coordinate} is about to deactivate, be sure to refresh that snitch! Snitch will be deactivated <t:${expireTime}:R>`;
     }
 
-    if (isDMEnabled == true) {
-        await scheduleReminder(client, userId, message, timeUntilReminder);
+    if (isDMEnabled === 'true' || isDMEnabled === true) {
+        await scheduleReminder(client, reminderKey, userId, message, timeUntilReminder);
     }
-    else if (isDMEnabled == false) {
+    else if (isDMEnabled === 'false' || isDMEnabled === false) {
         // TODO 3: send to a channel assigned by a user
     }
 }
 
-module.exports = async (client) => {
+async function remindEvent(client) {
     const currentTime = Math.floor(Date.now() / 1000);
 
     // Check the cache first
-    for (const [reminderKey, cachedReminder] of CacheManager.cache.entries()) {
+    for (const [reminderKey, cachedReminder] of CacheManager.getEntries()) {
         const { userId, description, typeName, coordinate, expireTime, scheduleTime, isDMEnabled, channelTarget } = cachedReminder;
 
         // If the reminder is still valid, skip database lookup
         if (CacheManager.isReminderValid(expireTime)) {
-            console.log('Reminder is cached and valid.');
+            //console.log('Reminder is cached and valid.');
 
-            if (scheduleTime > currentTime) {
+            if (scheduleTime > currentTime && expireTime > currentTime) {
                 const timeUntilReminder = scheduleTime - currentTime;
-                await messageContent(client, userId, description, typeName, coordinate, expireTime, isDMEnabled, channelTarget, timeUntilReminder);
+                await messageContent(client, reminderKey, userId, description, typeName, coordinate, expireTime, isDMEnabled, channelTarget, timeUntilReminder);
             }
         } else {
             // Remove expired reminder from cache
@@ -88,7 +92,12 @@ module.exports = async (client) => {
         if (scheduleTime > currentTime && expireTime > currentTime) {
             // Calculate time remaining until the schedule time
             const timeUntilReminder = scheduleTime - currentTime;
-            await messageContent(client, userId, description, typeName, coordinate, expireTime, isDMEnabled, channelTarget, timeUntilReminder);
+            await messageContent(client, reminderKey, userId, description, typeName, coordinate, expireTime, isDMEnabled, channelTarget, timeUntilReminder);
         }
     }
+}
+
+module.exports = {
+    messageContent,
+    remindEvent
 }
