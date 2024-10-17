@@ -142,14 +142,14 @@ async function listAllRows() {
     return row;
 }
 
-async function deleteRow(tagUserId, tagDesc, tagCoord) {
-    const row = null;
+async function deleteRow(tagDesc, tagCoord) {
+    var row = null;
 
     // Equivalent to: DELETE from UserReminder WHERE description = ?;
-    if (tagDesc) {
+    if (tagDesc !== null && tagDesc !== "") {
         row = await userReminderTable.destroy({ where: { description: tagDesc } });
     }
-    else if (tagCoord) {
+    else if (tagCoord !== null && tagCoord !== "") {
         row = await userReminderTable.destroy({ where: { coordinate: tagCoord } });
     }
 
