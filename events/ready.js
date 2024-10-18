@@ -12,11 +12,15 @@ module.exports = {
         await connectDatabase();
         console.log(`Logged in as ${client.user.tag}`);
 
-        const rows = await listAllRows();
+        // if the code decide to break itself, use this
+        //if (!isConnectedDB) return;
 
+        const rows = await listAllRows();
+        console.log("Restoring scheduled reminders...");
         for (const row of rows) {
             var userId = decryptData(row.userId) || 0;
-            var description = decryptData(row.description) || 'undefined name';
+            var itemName = decryptData(row.itemName) || 'undefined name';
+            var namelayerName = decryptData(row.namelayerName) || '-';
             var typeName = decryptData(row.typeName) || 'undefined type';
             var coordinate = decryptData(row.coordinate) || '0,0,0';
             var expireTime = decryptData(row.expirationTimestamp) || 0;
@@ -24,11 +28,12 @@ module.exports = {
             var isDMEnabled = decryptData(row.isDMEnabled) || true;
             var channelTarget = decryptData(row.channelTarget) || 0;
 
-            const reminderKey = `${row.userId}-${row.description}`;
+            const reminderKey = `${row.userId}-${row.itemName}`;
 
             CacheManager.addReminder(reminderKey, {
                 userId,
-                description,
+                itemName,
+                namelayerName,
                 typeName,
                 coordinate,
                 expireTime,
@@ -44,12 +49,10 @@ module.exports = {
                 const timeUntilReminder = scheduleTime - currentTime;
 
                 if (timeUntilReminder > 0) {
-                    console.log("Restoring scheduled reminders...");
-                    messageContent(client, reminderKey, userId, description, typeName, coordinate, expireTime, isDMEnabled, channelTarget, timeUntilReminder);
+                    messageContent(client, reminderKey, userId, itemName, namelayerName, typeName, coordinate, expireTime, isDMEnabled, channelTarget, timeUntilReminder);
                 }
             }
         }
-
         console.log("Database and cache loaded, bot is ready to use.");
     },
 }

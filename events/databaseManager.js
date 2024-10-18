@@ -27,7 +27,7 @@ async function connectDatabase() {
 async function createTemplateTable(dbConn) {
     // Create a template table on startup. With Sequelize, it is virtually supported on any database engines.
     // Same as "CREATE TABLE" command
-    userReminderTable = dbConn.define('UserReminder', {
+    userReminderTable = dbConn.define('UserReminders', {
         userId: {
             type: sequelize.INTEGER,
             allowNull: false
@@ -37,7 +37,8 @@ async function createTemplateTable(dbConn) {
             allowNull: false
         },
         typeName: sequelize.STRING,
-        description: sequelize.STRING,
+        itemName: sequelize.STRING,
+        namelayerName: sequelize.STRING,
         coordinate: sequelize.STRING,
         schedule: sequelize.STRING,
         isDMEnabled: sequelize.BOOLEAN,
@@ -55,14 +56,15 @@ async function createTemplateTable(dbConn) {
     userReminderTable.sync();
 }
 
-async function addRow(tagUserId, tagServerId, tagTypeName, tagDesc, tagCoord, tagSchedule, tagDM, tagChannel, tagSubmission, tagExpiration) {
+async function addRow(tagUserId, tagServerId, tagTypeName, tagName, tagNL, tagCoord, tagSchedule, tagDM, tagChannel, tagSubmission, tagExpiration) {
     try {
         // Equivalent to: INSERT INTO UserReminder (userId, serverId, typeName) values (?, ?, ?);
         const row = await userReminderTable.create({
             userId: tagUserId,
             serverId: tagServerId,
             typeName: tagTypeName,
-            description: tagDesc,
+            itemName: tagName,
+            namelayerName: tagNL,
             coordinate: tagCoord,
             schedule: tagSchedule,
             isDMEnabled: tagDM,
@@ -78,19 +80,19 @@ async function addRow(tagUserId, tagServerId, tagTypeName, tagDesc, tagCoord, ta
     }
 }
 
-async function selectRow(tagUserId, tagDesc, tagCoord) {
+async function selectRow(tagUserId, tagName, tagCoord) {
     const row = null;
 
-    // Equivalent to: SELECT * FROM UserReminder WHERE description = 'tagDesc' LIMIT 1;
-    if (tagDesc) {
-        row = await userReminderTable.findOne({ where: { description: tagDesc } });
+    // Equivalent to: SELECT * FROM UserReminder WHERE itemName = 'tagName' LIMIT 1;
+    if (tagName) {
+        row = await userReminderTable.findOne({ where: { itemName: tagName } });
     }
     else if (tagCoord) {
         row = await userReminderTable.findOne({ where: { coordinate: tagCoord } });
     }
 
     if (row) {
-        // Equivalent to: UPDATE UserReminder SET usage_count = usage_count + 1 WHERE description = 'tagDesc';
+        // Equivalent to: UPDATE UserReminder SET usage_count = usage_count + 1 WHERE itemName = 'tagName';
         row.increment('usage_count');
 
         return row.get('expirationTimestamp')
@@ -100,12 +102,12 @@ async function selectRow(tagUserId, tagDesc, tagCoord) {
     }
 }
 
-async function updateRow(tagUserId, tagDesc, tagCoord, tagTypeName) {
+async function updateRow(tagUserId, tagName, tagCoord, tagTypeName) {
     const row = null;
 
-    // Equivalent to: UPDATE UserReminder (typeName) values (?) WHERE description='?';
-    if (tagDesc) {
-        row = await userReminderTable.update({ typeName: tagTypeName }, { where: { description: tagDesc } });
+    // Equivalent to: UPDATE UserReminder (typeName) values (?) WHERE itemName='?';
+    if (tagName) {
+        row = await userReminderTable.update({ typeName: tagTypeName }, { where: { itemName: tagName } });
     }
     else if (tagCoord) {
         row = await userReminderTable.update({ typeName: tagTypeName }, { where: { coordinate: tagCoord } });
@@ -119,12 +121,12 @@ async function updateRow(tagUserId, tagDesc, tagCoord, tagTypeName) {
     }
 }
 
-async function updateTimeoutRow(tagDesc, tagTimeOutInterval) {
+async function updateTimeoutRow(tagName, tagTimeOutInterval) {
     const row = null;
 
-    // Equivalent to: UPDATE UserReminder (isOnTimeOutInterval) values (?) WHERE description='?';
-    if (tagDesc) {
-        row = await userReminderTable.update({ isOnTimeOutInterval: tagTimeOutInterval }, { where: { description: tagDesc } });
+    // Equivalent to: UPDATE UserReminder (isOnTimeOutInterval) values (?) WHERE itemName='?';
+    if (tagName) {
+        row = await userReminderTable.update({ isOnTimeOutInterval: tagTimeOutInterval }, { where: { itemName: tagName } });
     }
 
     if (row > 0) {
@@ -142,12 +144,12 @@ async function listAllRows() {
     return row;
 }
 
-async function deleteRow(tagDesc, tagCoord) {
+async function deleteRow(tagName, tagCoord) {
     var row = null;
 
-    // Equivalent to: DELETE from UserReminder WHERE description = ?;
-    if (tagDesc !== null && tagDesc !== "") {
-        row = await userReminderTable.destroy({ where: { description: tagDesc } });
+    // Equivalent to: DELETE from UserReminder WHERE itemName = ?;
+    if (tagName !== null && tagName !== "") {
+        row = await userReminderTable.destroy({ where: { itemName: tagName } });
     }
     else if (tagCoord !== null && tagCoord !== "") {
         row = await userReminderTable.destroy({ where: { coordinate: tagCoord } });

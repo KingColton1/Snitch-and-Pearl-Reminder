@@ -27,7 +27,7 @@ module.exports = {
         var parsedJSON = JSON.parse(JSONRow);
         for (const key in parsedJSON) {
             var decryptedUserId = decryptData(parsedJSON[key].userId);
-            var decryptedDesc = decryptData(parsedJSON[key].description);
+            var decryptedName = decryptData(parsedJSON[key].itemName);
             var decryptedType = decryptData(parsedJSON[key].typeName);
             var scheduleTime = decryptData(parsedJSON[key].schedule);
             var decryptedSubmit = decryptData(parsedJSON[key].submissionTimestamp);
@@ -35,8 +35,8 @@ module.exports = {
             var decryptedCoord = decryptData(parsedJSON[key].coordinate);
 
             // If user's input matches a decrypted data, push everything related to a chosen row to list
-            if (decryptedUserId === interaction.member.id && (decryptedDesc.toLowerCase() === nameTarget.toLowerCase() || decryptedCoord === coordTarget)) {
-                list.push(decryptedDesc, decryptedType, scheduleTime, decryptedSubmit, decryptedExpire, decryptedCoord);
+            if (decryptedUserId === interaction.member.id && (decryptedName.toLowerCase() === nameTarget.toLowerCase() || decryptedCoord === coordTarget)) {
+                list.push(decryptedName, decryptedType, scheduleTime, decryptedSubmit, decryptedExpire, decryptedCoord);
             }
         }
 

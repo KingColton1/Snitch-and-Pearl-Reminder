@@ -3,13 +3,13 @@ const activeTimeouts = new Map();
 
 class CacheManager {
     // Method to add an item to the cache
-    static addReminder(key, reminder) {
-        cache.set(key, reminder);
+    static addReminder(reminderId, reminder) {
+        cache.set(reminderId, reminder);
     }
 
     // Method to get an item from the cache
-    static getReminder(key) {
-        return cache.get(key);
+    static getReminder(reminderId) {
+        return cache.get(reminderId);
     }
 
     // Method to get all entries from the cache
@@ -18,8 +18,8 @@ class CacheManager {
     }
 
     // Method to remove an item from the cache
-    static removeReminder(key) {
-        cache.delete(key);
+    static removeReminder(reminderId) {
+        cache.delete(reminderId);
     }
 
     // Method to clear the cache
@@ -34,8 +34,8 @@ class CacheManager {
     }
 
     // Method to check if an item is in the cache
-    static isReminderCached(key) {
-        return cache.has(key);
+    static isReminderCached(reminderId) {
+        return cache.has(reminderId);
     }
 
     // Method to check if a timeout is already active

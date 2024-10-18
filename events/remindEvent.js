@@ -22,14 +22,14 @@ async function scheduleReminder(client, reminderKey, userId, message, delay) {
     CacheManager.cacheTimeout(reminderKey, timeoutId);
 }
 
-async function messageContent(client, reminderKey, userId, description, typeName, coordinate, expireTime, isDMEnabled, channelTarget, timeUntilReminder) {
+async function messageContent(client, reminderKey, userId, itemName, namelayerName, typeName, coordinate, expireTime, isDMEnabled, channelTarget, timeUntilReminder) {
     var message = '';
 
     if (typeName === "pearl") {
-        message = `${description}'s fuel is about to run out, be sure to refuel that pearl! Pearl's fuel will run out <t:${expireTime}:R>`;
+        message = `${itemName}'s fuel is about to run out, be sure to refuel that pearl! Pearl's fuel will run out <t:${expireTime}:R>`;
     }
     else if (typeName === "snitch") {
-        message = `${description} snitch at ${coordinate} is about to deactivate, be sure to refresh that snitch! Snitch will be deactivated <t:${expireTime}:R>`;
+        message = `${itemName} snitch at ${coordinate} is about to deactivate, be sure to refresh that snitch! Snitch will be deactivated <t:${expireTime}:R>`;
     }
 
     if (isDMEnabled === 'true' || isDMEnabled === true) {
@@ -45,7 +45,7 @@ async function remindEvent(client) {
 
     // Check the cache first
     for (const [reminderKey, cachedReminder] of CacheManager.getEntries()) {
-        const { userId, description, typeName, coordinate, expireTime, scheduleTime, isDMEnabled, channelTarget } = cachedReminder;
+        const { userId, itemName, namelayerName, typeName, coordinate, expireTime, scheduleTime, isDMEnabled, channelTarget } = cachedReminder;
 
         // If the reminder is still valid, skip database lookup
         if (CacheManager.isReminderValid(expireTime)) {
@@ -53,7 +53,7 @@ async function remindEvent(client) {
 
             if (scheduleTime > currentTime && expireTime > currentTime) {
                 const timeUntilReminder = scheduleTime - currentTime;
-                await messageContent(client, reminderKey, userId, description, typeName, coordinate, expireTime, isDMEnabled, channelTarget, timeUntilReminder);
+                await messageContent(client, reminderKey, userId, itemName, namelayerName, typeName, coordinate, expireTime, isDMEnabled, channelTarget, timeUntilReminder);
             }
         } else {
             // Remove expired reminder from cache
@@ -68,7 +68,8 @@ async function remindEvent(client) {
 
     for (const row in rows) {
         var userId = decryptData(parsedJSON[row].userId) || 0;
-        var description = decryptData(parsedJSON[row].description) || 'undefined name';
+        var itemName = decryptData(parsedJSON[row].itemName) || 'undefined name';
+        var namelayerName = decryptData(parsedJSON[row].namelayerName) || '-';
         var typeName = decryptData(parsedJSON[row].typeName) || 'undefined type';
         var coordinate = decryptData(parsedJSON[row].coordinate) || '0,0,0';
         var expireTime = decryptData(parsedJSON[row].expirationTimestamp) || 0;
@@ -76,11 +77,12 @@ async function remindEvent(client) {
         var isDMEnabled = decryptData(parsedJSON[row].isDMEnabled) || true;
         var channelTarget = decryptData(parsedJSON[row].channelTarget) || 0;
 
-        const reminderKey = `${parsedJSON[row].userId}-${parsedJSON[row].description}`;
+        const reminderKey = `${parsedJSON[row].userId}-${parsedJSON[row].itemName}`;
 
         CacheManager.addReminder(reminderKey, {
             userId,
-            description,
+            itemName,
+            namelayerName,
             typeName,
             coordinate,
             expireTime,
@@ -92,7 +94,7 @@ async function remindEvent(client) {
         if (scheduleTime > currentTime && expireTime > currentTime) {
             // Calculate time remaining until the schedule time
             const timeUntilReminder = scheduleTime - currentTime;
-            await messageContent(client, reminderKey, userId, description, typeName, coordinate, expireTime, isDMEnabled, channelTarget, timeUntilReminder);
+            await messageContent(client, reminderKey, userId, itemName, namelayerName, typeName, coordinate, expireTime, isDMEnabled, channelTarget, timeUntilReminder);
         }
     }
 }

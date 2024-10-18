@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { listAllRows, deleteRow } = require(`../events/databaseManager.js`);
 const { decryptData } = require('../libs/encryption.js');
+const CacheManager = require('../libs/cacheManager.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -43,21 +44,25 @@ module.exports = {
 
         for (const row of rows) {
             var userId = decryptData(row.userId) || 0;
-            var description = decryptData(row.description) || 'undefined name';
+            var itemName = decryptData(row.itemName) || 'undefined name';
             var coordinate = decryptData(row.coordinate) || '0,0,0';
 
             if (userId === interaction.member.id) {
-                if (description.toLowerCase() === nameTarget.toLowerCase() && coordinate === coordTarget && interaction.options.getSubcommand() === 'snitch') {
+                if (itemName.toLowerCase() === nameTarget.toLowerCase() && coordinate === coordTarget && interaction.options.getSubcommand() === 'snitch') {
                     console.log("Trying to delete a snitch reminder...");
-                    chosenName = description;
+                    chosenName = itemName;
                     chosenCoord = coordinate;
                     isSuccess = deleteRow(null, row.coordinate);
+                    CacheManager.removeTimeout(`${row.userId}-${row.itemName}`);
+                    CacheManager.removeReminder(`${row.userId}-${row.itemName}`);
                     continue;
                 }
-                else if (description.toLowerCase() === nameTarget.toLowerCase() && interaction.options.getSubcommand() === 'pearl') {
+                else if (itemName.toLowerCase() === nameTarget.toLowerCase() && interaction.options.getSubcommand() === 'pearl') {
                     console.log("Trying to delete a pearl reminder...");
-                    chosenName = description;
-                    isSuccess = deleteRow(row.description, null);
+                    chosenName = itemName;
+                    isSuccess = deleteRow(row.itemName, null);
+                    CacheManager.removeTimeout(`${row.userId}-${row.itemName}`);
+                    CacheManager.removeReminder(`${row.userId}-${row.itemName}`);
                     continue;
                 }
             }

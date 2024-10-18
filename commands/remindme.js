@@ -56,6 +56,12 @@ module.exports = {
                 .setMaxLength(255)
             )
             .addStringOption(option =>
+                option.setName('namelayer')
+                .setDescription('Input namelayer where your snitch belongs')
+                .setRequired(true)
+                .setMaxLength(255)
+            )
+            .addStringOption(option =>
                 option.setName('coordinate')
                 .setDescription('Coordinate of your snitch')
                 .setRequired(true)
@@ -98,6 +104,7 @@ module.exports = {
         // Get something from user's inputs
         var typeTarget = '';
         var nameTarget = '';
+        var namelayerTarget = '-';
         var coordTarget = "0,0,0";
         var scheduleTarget = '';
         var dmTarget = true;
@@ -125,6 +132,7 @@ module.exports = {
         else if (interaction.options.getSubcommand() === 'snitch') {
             typeTarget = "snitch";
             nameTarget = interaction.options.getString('name');
+            namelayerTarget = interaction.options.getString('namelayer');
             coordTarget = interaction.options.getString('coordinate');
             scheduleTarget = interaction.options.getString('schedule-reminder');
             dmTarget = interaction.options.getBoolean('dm');
@@ -146,6 +154,7 @@ module.exports = {
         var encryptedServerId = encryptData(interaction.guild.id);
         var encryptedType = encryptData(typeTarget);
         var encryptedName = encryptData(nameTarget);
+        var encryptedNL = encryptData(namelayerTarget);
         var encryptedCoord = encryptData(coordTarget);
         var encryptedSchedule = encryptData(scheduleTarget);
         var encryptedDM = encryptData(dmTarget);
@@ -154,7 +163,7 @@ module.exports = {
         var encryptedSubmit = encryptData(submissionTimestamp);
 
         // Save them to the database
-        let newRow = await addRow(encryptedUserId, encryptedServerId, encryptedType, encryptedName, encryptedCoord, encryptedSchedule, encryptedDM, encryptedChannel, encryptedSubmit, encryptedExpire);
+        let newRow = await addRow(encryptedUserId, encryptedServerId, encryptedType, encryptedName, encryptedNL, encryptedCoord, encryptedSchedule, encryptedDM, encryptedChannel, encryptedSubmit, encryptedExpire);
 
         if (newRow == true) {
             message = `Your reminder for ${nameTarget} ${typeTarget} is created!`;
