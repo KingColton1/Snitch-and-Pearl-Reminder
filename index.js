@@ -5,7 +5,7 @@ const { Client, Collection, Events, GatewayIntentBits, REST, Routes } = require(
 const { discordToken, discordClientId } = require('./libs/config.js');
 const { remindEvent } = require('./events/remindEvent.js');
 
-const client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]});
+const client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.DirectMessages, GatewayIntentBits.DirectMessageReactions]});
 
 client.commands = new Collection();
 const cachedCommands = [];

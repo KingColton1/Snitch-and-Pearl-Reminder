@@ -39,6 +39,17 @@ module.exports = {
         var list = [];
 
         var listRows = await listAllRows();
+
+        if (!listRows || listRows.length === 0) {
+            embeds.push(new EmbedBuilder()
+            .setTitle('Empty Reminders List')
+            .setDescription(`<@${interaction.member.id}>, you have not add any reminders yet. Use /remindme to get started!`)
+            .setColor("Red"));
+
+            await embedPage(interaction, embeds, true);
+            return;
+        }
+
         var JSONRow = JSON.stringify(listRows, null, 2);
         var parsedJSON = JSON.parse(JSONRow);
         for (const key in parsedJSON) {

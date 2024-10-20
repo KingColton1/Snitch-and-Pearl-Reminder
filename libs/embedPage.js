@@ -1,13 +1,13 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 
-module.exports = async (interaction, pages, time = 30 * 1000) => {
+module.exports = async (interaction, pages, ephemeral = false, time = 30 * 1000) => {
     try {
         if (!interaction || !pages || !pages > 0) throw new Error('[EmbedPages] Invalid args');
 
-        await interaction.deferReply();
+        await interaction.deferReply({ ephemeral });
 
         if (pages.length === 1) {
-            return await interaction.editReply({ embeds: pages, components: [], fetchReply: true });
+            return await interaction.editReply({ embeds: pages, components: [], ephemeral, fetchReply: true });
         }
 
         var index = 0;
@@ -41,7 +41,7 @@ module.exports = async (interaction, pages, time = 30 * 1000) => {
             .setStyle(ButtonStyle.Primary)
 
         const buttons = new ActionRowBuilder().addComponents([firstPage, prevPage, pageCount, nextPage, lastPage]);
-        const msg = await interaction.editReply({ embeds: [pages[index]], components: [buttons], fetchReply: true });
+        const msg = await interaction.editReply({ embeds: [pages[index]], components: [buttons], ephemeral, fetchReply: true });
 
         const collector = await msg.createMessageComponentCollector({
             componentType: ComponentType.Button,

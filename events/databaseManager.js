@@ -102,21 +102,20 @@ async function selectRow(tagUserId, tagName, tagCoord) {
     }
 }
 
-async function updateRow(tagUserId, tagName, tagCoord, tagTypeName) {
-    const row = null;
+async function updateRow(tagUserId, tagName, tagCoord, tagNL, tagSchedule, tagExpiration) {
+    const updateData = {};
 
-    // Equivalent to: UPDATE UserReminder (typeName) values (?) WHERE itemName='?';
-    if (tagName) {
-        row = await userReminderTable.update({ typeName: tagTypeName }, { where: { itemName: tagName } });
-    }
-    else if (tagCoord) {
-        row = await userReminderTable.update({ typeName: tagTypeName }, { where: { coordinate: tagCoord } });
-    }
+    if (tagName) updateData.itemName = tagName;
+    if (tagCoord) updateData.coordinate = tagCoord;
+    if (tagNL) updateData.itemName = tagNL;
+    if (tagSchedule) updateData.itemName = tagSchedule;
+    if (tagExpiration) updateData.expirationTimestamp = tagExpiration;
 
-    if (row > 0) {
-		return true;
-	}
-    else {
+    try {
+        const [row] = await userReminderTable.update(updateData, { where: { userId: tagUserId, itemName: tagName } });
+        return row > 0;
+    }
+    catch (err) {
         return false;
     }
 }
@@ -144,7 +143,7 @@ async function listAllRows() {
     return row;
 }
 
-async function deleteRow(tagName, tagCoord) {
+async function deleteRow(tagName, tagCoord, tagUserId, tagNL) {
     var row = null;
 
     // Equivalent to: DELETE from UserReminder WHERE itemName = ?;
@@ -153,6 +152,12 @@ async function deleteRow(tagName, tagCoord) {
     }
     else if (tagCoord !== null && tagCoord !== "") {
         row = await userReminderTable.destroy({ where: { coordinate: tagCoord } });
+    }
+    else if (tagUserId !== null && tagUserId !== "") {
+        row = await userReminderTable.destroy({ where: { userId: tagUserId } });
+    }
+    else if (tagNL !== null && tagNL !== "") {
+        row = await userReminderTable.destroy({ where: { namelayerName: tagNL } });
     }
 
     if (!row) {
