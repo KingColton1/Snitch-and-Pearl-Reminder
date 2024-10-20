@@ -1,6 +1,8 @@
 const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
 const { listAllRows } = require(`../events/databaseManager.js`);
 const { decryptData } = require('../libs/encryption.js');
+const { v4: uuidv4 } = require('uuid');
+const TempStorage = require('../libs/tempStorage.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -35,6 +37,9 @@ module.exports = {
         var nameTarget = interaction.options.getString('name');
         var coordTarget = interaction.options.getString('coordinate') || null;
         var list = [];
+        var selectedUserId = null;
+        var selectedName = null;
+        const uniqueId = uuidv4();
 
         var listRows = await listAllRows();
         var JSONRow = JSON.stringify(listRows, null, 2);
@@ -48,13 +53,17 @@ module.exports = {
             var decryptedCoord = decryptData(parsedJSON[key].coordinate);
 
             if (decryptedUserId === interaction.member.id && (decryptedName.toLowerCase() === nameTarget.toLowerCase() || decryptedCoord === coordTarget)) {
+                selectedUserId = parsedJSON[key].userId;
+                selectedName = parsedJSON[key].itemName;
                 list.push(decryptedName, scheduleTime, decryptedExpire, decryptedNL, decryptedCoord);
             }
         }
 
+        TempStorage.set(uniqueId, { userId: selectedUserId, itemName: selectedName });
+
         // Show a modal for the user to edit the fields
         const modal = new ModalBuilder()
-            .setCustomId('editReminderModal')
+            .setCustomId(`editReminderModal=${uniqueId}`)
             .setTitle('Edit Reminder');
 
         // Create input fields

@@ -3,13 +3,21 @@ const { listAllRows, updateRow } = require(`./databaseManager.js`);
 const { encryptData, decryptData } = require('../libs/encryption.js');
 const { timeConverter, calculateSchedule } = require('../libs/timeConverter.js');
 const CacheManager = require('../libs/cacheManager.js');
+const TempStorage = require('../libs/tempStorage.js');
 
 module.exports = {
     name: Events.InteractionCreate,
     async execute(interaction) {
         if (!interaction.isModalSubmit()) return;
 
-        if (interaction.customId === 'editReminderModal') {
+        const [_, uniqueId] = interaction.customId.split('=');
+        const reminderData = TempStorage.get(uniqueId);
+
+        if (!reminderData) {
+            return interaction.reply({ content: 'Error retrieving reminder data.', ephemeral: true });
+        }
+
+        if (interaction.customId.startsWith('editReminderModal')) {
             const newName = interaction.fields.getTextInputValue('newName') || null;
             const newSchedule = interaction.fields.getTextInputValue('newSchedule') || null;
             const newExpiration = await timeConverter(interaction.fields.getTextInputValue('newExpiration')) || null;
@@ -33,33 +41,14 @@ module.exports = {
             for (const key in parsedJSON) {
                 var decryptedUserId = decryptData(parsedJSON[key].userId);
                 var decryptedName = decryptData(parsedJSON[key].itemName);
-                var decryptedCoord = decryptData(parsedJSON[key].coordinate);
 
-                console.log("test");
-
-                if (decryptedUserId === interaction.member.id && decryptedName.toLowerCase() === newName.toLowerCase() && decryptedCoord === newCoordinates) {
+                if (decryptedUserId === interaction.member.id && reminderData.userId === parsedJSON[key].userId) {
                     if (newSchedule) {
                         newSchedule = await calculateSchedule(newSchedule, newExpiration);
                     }
 
                     result = await updateRow(parsedJSON[key].userId, encryptData(newName), encryptData(newCoordinates), encryptData(newNL), encryptData(newSchedule), encryptData(newExpiration));
-                    console.log(result);
-                    if (CacheManager.isReminderCached(`${parsedJSON[key].userId}-${parsedJSON[key].itemName}`)) {
-                        CacheManager.removeTimeout(`${parsedJSON[key].userId}-${parsedJSON[key].itemName}`);
-                        CacheManager.removeReminder(`${parsedJSON[key].userId}-${parsedJSON[key].itemName}`);
-                    }
-                    continue;
-                }
-                else if (decryptedUserId === interaction.member.id && decryptedName.toLowerCase() === newName.toLowerCase()) {
-                    console.log("test in pearl if statement");
-                    if (newSchedule) {
-                        newSchedule = await calculateSchedule(newSchedule, newExpiration);
-                    }
 
-                    console.log("test processing");
-
-                    result = await updateRow(parsedJSON[key].userId, encryptData(newName), null, null, encryptData(newSchedule), encryptData(newExpiration));
-                    console.log(result);
                     if (CacheManager.isReminderCached(`${parsedJSON[key].userId}-${parsedJSON[key].itemName}`)) {
                         CacheManager.removeTimeout(`${parsedJSON[key].userId}-${parsedJSON[key].itemName}`);
                         CacheManager.removeReminder(`${parsedJSON[key].userId}-${parsedJSON[key].itemName}`);
