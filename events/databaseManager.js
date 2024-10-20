@@ -105,6 +105,8 @@ async function selectRow(tagUserId, tagName, tagCoord) {
 async function updateRow(tagUserId, tagName, tagCoord, tagNL, tagSchedule, tagExpiration) {
     const updateData = {};
 
+    console.log(tagUserId);
+
     if (tagName) updateData.itemName = tagName;
     if (tagCoord) updateData.coordinate = tagCoord;
     if (tagNL) updateData.itemName = tagNL;
@@ -112,7 +114,7 @@ async function updateRow(tagUserId, tagName, tagCoord, tagNL, tagSchedule, tagEx
     if (tagExpiration) updateData.expirationTimestamp = tagExpiration;
 
     try {
-        const [row] = await userReminderTable.update(updateData, { where: { userId: tagUserId, itemName: tagName } });
+        const [row] = await userReminderTable.update(updateData, { where: { userId: tagUserId } });
         return row > 0;
     }
     catch (err) {

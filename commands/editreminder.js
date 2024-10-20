@@ -68,7 +68,7 @@ module.exports = {
         const scheduleInput = new TextInputBuilder()
             .setCustomId('newSchedule')
             .setLabel('Edit Schedule (optional)')
-            .setPlaceholder(list[1])
+            .setPlaceholder("Use this format: Xhour(s) or Xweek(s). Ex: 2hours. No space inbetween.")
             .setStyle(TextInputStyle.Short)
             .setRequired(false);
 
