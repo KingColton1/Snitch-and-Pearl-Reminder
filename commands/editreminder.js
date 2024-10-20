@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
 const { listAllRows } = require(`../events/databaseManager.js`);
 const { decryptData } = require('../libs/encryption.js');
-const CacheManager = require('../libs/cacheManager.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -35,7 +34,6 @@ module.exports = {
 	async execute(interaction) {
         var nameTarget = interaction.options.getString('name');
         var coordTarget = interaction.options.getString('coordinate') || null;
-        const message = '';
         var list = [];
 
         var listRows = await listAllRows();
@@ -67,20 +65,6 @@ module.exports = {
             .setStyle(TextInputStyle.Short)
             .setRequired(false);
 
-        const coordinateInput = new TextInputBuilder()
-            .setCustomId('newCoordinates')
-            .setLabel('Edit Coordinates (optional)')
-            .setPlaceholder(list[4])
-            .setStyle(TextInputStyle.Short)
-            .setRequired(false);
-
-        const namelayerInput = new TextInputBuilder()
-            .setCustomId('newNL')
-            .setLabel('Edit Namelayer (optional)')
-            .setPlaceholder(list[3])
-            .setStyle(TextInputStyle.Short)
-            .setRequired(false);
-
         const scheduleInput = new TextInputBuilder()
             .setCustomId('newSchedule')
             .setLabel('Edit Schedule (optional)')
@@ -95,18 +79,29 @@ module.exports = {
             .setStyle(TextInputStyle.Short)
             .setRequired(false);
 
-        // Add inputs to the modal
-        const row1 = new ActionRowBuilder().addComponents(nameInput);
-        const row2 = new ActionRowBuilder().addComponents(coordinateInput);
-        const row3 = new ActionRowBuilder().addComponents(namelayerInput);
-        const row4 = new ActionRowBuilder().addComponents(scheduleInput);
-        const row5 = new ActionRowBuilder().addComponents(expirationInput);
+            const row1 = new ActionRowBuilder().addComponents(nameInput);
+            const row2 = new ActionRowBuilder().addComponents(scheduleInput);
+            const row3 = new ActionRowBuilder().addComponents(expirationInput);
+            modal.addComponents(row1, row2, row3);
 
-        if (interaction.options.getSubcommand() === 'pearl') {
-            modal.addComponents(row1, row4, row5);
-        }
-        else if (interaction.options.getSubcommand() === 'snitch') {
-            modal.addComponents(row1, row2, row3, row4, row5);
+        if (interaction.options.getSubcommand() === 'snitch') {
+            const coordinateInput = new TextInputBuilder()
+                .setCustomId('newCoordinates')
+                .setLabel('Edit Coordinates (optional)')
+                .setPlaceholder(list[4])
+                .setStyle(TextInputStyle.Short)
+                .setRequired(false);
+
+            const namelayerInput = new TextInputBuilder()
+                .setCustomId('newNL')
+                .setLabel('Edit Namelayer (optional)')
+                .setPlaceholder(list[3])
+                .setStyle(TextInputStyle.Short)
+                .setRequired(false);
+
+            const row4 = new ActionRowBuilder().addComponents(namelayerInput);
+            const row5 = new ActionRowBuilder().addComponents(coordinateInput);
+            modal.addComponents(row4, row5);
         }
 
         // Show the modal to the user
