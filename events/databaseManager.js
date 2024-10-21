@@ -105,12 +105,10 @@ async function selectRow(tagUserId, tagName, tagCoord) {
 async function updateRow(tagUserId, tagName, tagCoord, tagNL, tagSchedule, tagExpiration) {
     const updateData = {};
 
-    console.log(tagUserId);
-
     if (tagName) updateData.itemName = tagName;
     if (tagCoord) updateData.coordinate = tagCoord;
-    if (tagNL) updateData.itemName = tagNL;
-    if (tagSchedule) updateData.itemName = tagSchedule;
+    if (tagNL) updateData.namelayerName = tagNL;
+    if (tagSchedule) updateData.schedule = tagSchedule;
     if (tagExpiration) updateData.expirationTimestamp = tagExpiration;
 
     try {

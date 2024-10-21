@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
 const { listAllRows } = require(`../events/databaseManager.js`);
 const { decryptData } = require('../libs/encryption.js');
+const { unixToTimestamp, reverseSchedule } = require('../libs/timeConverter.js');
 const { v4: uuidv4 } = require('uuid');
 const TempStorage = require('../libs/tempStorage.js');
 
@@ -47,12 +48,18 @@ module.exports = {
         for (const key in parsedJSON) {
             var decryptedUserId = decryptData(parsedJSON[key].userId);
             var decryptedName = decryptData(parsedJSON[key].itemName);
+            var decryptedType = decryptData(parsedJSON[key].typeName);
             var scheduleTime = decryptData(parsedJSON[key].schedule);
             var decryptedExpire = decryptData(parsedJSON[key].expirationTimestamp);
             var decryptedNL = decryptData(parsedJSON[key].namelayerName);
             var decryptedCoord = decryptData(parsedJSON[key].coordinate);
 
-            if (decryptedUserId === interaction.member.id && (decryptedName.toLowerCase() === nameTarget.toLowerCase() || decryptedCoord === coordTarget)) {
+            if (decryptedUserId === interaction.member.id && decryptedName.toLowerCase() === nameTarget.toLowerCase() && interaction.options.getSubcommand() === 'pearl' && decryptedType === 'pearl') {
+                selectedUserId = parsedJSON[key].userId;
+                selectedName = parsedJSON[key].itemName;
+                list.push(decryptedName, scheduleTime, decryptedExpire);
+            }
+            else if (decryptedUserId === interaction.member.id && decryptedName.toLowerCase() === nameTarget.toLowerCase() && decryptedCoord === coordTarget && interaction.options.getSubcommand() === 'snitch' && decryptedType === 'snitch') {
                 selectedUserId = parsedJSON[key].userId;
                 selectedName = parsedJSON[key].itemName;
                 list.push(decryptedName, scheduleTime, decryptedExpire, decryptedNL, decryptedCoord);
@@ -76,15 +83,15 @@ module.exports = {
 
         const scheduleInput = new TextInputBuilder()
             .setCustomId('newSchedule')
-            .setLabel('Edit Schedule (optional)')
-            .setPlaceholder("Use this format: Xhour(s) or Xweek(s). Ex: 2hours. No space inbetween.")
+            .setLabel('Edit Schedule (optional, X hour(s) or X week)')
+            .setPlaceholder(reverseSchedule(list[1], list[2]))
             .setStyle(TextInputStyle.Short)
             .setRequired(false);
 
         const expirationInput = new TextInputBuilder()
             .setCustomId('newExpiration')
             .setLabel('Edit Expiration Time (optional)')
-            .setPlaceholder(list[2])
+            .setPlaceholder(unixToTimestamp(list[2]))
             .setStyle(TextInputStyle.Short)
             .setRequired(false);
 
