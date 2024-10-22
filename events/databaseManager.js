@@ -11,6 +11,7 @@ async function connectDatabase() {
             logging: false,
             storage: sqliteFileName
         })
+        sequelize.query("CREATE DATABASE `" + sqliteDatabase + "`;");
     }
     else {
         dbConn = new sequelize(dbDatabase, dbUser, dbPassword, {
@@ -19,6 +20,7 @@ async function connectDatabase() {
             dialect: storageType,
             logging: false
         })
+        sequelize.query("CREATE DATABASE `" + dbDatabase + "`;");
     }
 
     await createTemplateTable(dbConn);

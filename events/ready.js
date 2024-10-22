@@ -10,6 +10,7 @@ module.exports = {
     async execute(client) {
         // Connect to the database and create a template table if it doesn't exist yet
         await connectDatabase();
+        await new Promise(resolve => setTimeout(resolve, 1000));
         console.log(`Logged in as ${client.user.tag}`);
 
         // if the code decide to break itself, use this
