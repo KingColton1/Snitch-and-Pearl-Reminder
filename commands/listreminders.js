@@ -43,7 +43,7 @@ module.exports = {
         if (!listRows || listRows.length === 0) {
             embeds.push(new EmbedBuilder()
             .setTitle('Empty Reminders List')
-            .setDescription(`<@${interaction.member.id}>, you have not add any reminders yet. Use /remindme to get started!`)
+            .setDescription(`<@${interaction.user.id}>, you have not add any reminders yet. Use /remindme to get started!`)
             .setColor("Red"));
 
             await embedPage(interaction, embeds, true);
