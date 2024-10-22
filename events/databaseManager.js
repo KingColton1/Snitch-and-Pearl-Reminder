@@ -19,8 +19,7 @@ async function connectDatabase() {
             dialect: storageType,
             logging: false
         })
-        var boole = dbConn.query(`CREATE DATABASE ${dbDatabase};`);
-        console.log(boole);
+        dbConn.query(`CREATE DATABASE IF NOT EXISTS ${dbDatabase};`);
     }
 
     await createTemplateTable(dbConn);
