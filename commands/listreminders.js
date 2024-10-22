@@ -108,9 +108,9 @@ module.exports = {
         for (var i = 0; i < Math.ceil(list.length / 5); i++) {
             const pageItems = await pageArray(list, i + 1);
 
-            const nameField = pageItems.map(item => item.name).join('\n');
-            const expireField = pageItems.map(item => `<t:${item.expire}> ${item.coords ? '| ' + item.coords : ''}`).join('\n');
-            const namelayerField = pageItems.map(item => item.namelayer).join('\n');
+            const nameField = pageItems.map(item => `${item.name}`).join('\n');
+            const expireField = pageItems.map(item => `<t:${item.expire}:D>`).join('\n');
+            const namelayerField = pageItems.map(item => `${item.namelayer ? item.namelayer : ''}${item.coords ? ' | ' + item.coords : ''}`).join('\n');
 
             if (interaction.options.getSubcommand() === 'pearl') {
                 embeds.push(new EmbedBuilder()
@@ -126,8 +126,8 @@ module.exports = {
                 .setTitle('Snitch Reminders List')
                 .addFields(
                     { name: 'Name', value: nameField, inline: true },
-                    { name: 'Expiration | Coords', value: expireField, inline: true },
-                    { name: 'Namelayer', value: namelayerField, inline: true }
+                    { name: 'Expiration', value: expireField, inline: true },
+                    { name: 'Namelayer | Coords', value: namelayerField, inline: true }
                 )
                 .setColor("Blurple"));
             }
@@ -136,8 +136,8 @@ module.exports = {
                 .setTitle('All Reminders List')
                 .addFields(
                     { name: 'Name', value: nameField, inline: true },
-                    { name: 'Expiration | Coords', value: expireField, inline: true },
-                    { name: 'Namelayer', value: namelayerField, inline: true }
+                    { name: 'Expiration', value: expireField, inline: true },
+                    { name: 'Namelayer | Coords', value: namelayerField, inline: true }
                 )
                 .setColor("Blurple"));
             }

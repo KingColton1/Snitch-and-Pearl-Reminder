@@ -27,21 +27,29 @@ module.exports = {
         var parsedJSON = JSON.parse(JSONRow);
         for (const key in parsedJSON) {
             var decryptedUserId = decryptData(parsedJSON[key].userId);
+            var decryptedServerId = decryptData(parsedJSON[key].serverId);
             var decryptedName = decryptData(parsedJSON[key].itemName);
             var decryptedType = decryptData(parsedJSON[key].typeName);
             var scheduleTime = decryptData(parsedJSON[key].schedule);
             var decryptedSubmit = decryptData(parsedJSON[key].submissionTimestamp);
             var decryptedExpire = decryptData(parsedJSON[key].expirationTimestamp);
             var decryptedCoord = decryptData(parsedJSON[key].coordinate);
+            var decryptedDM = decryptData(parsedJSON[key].isDMEnabled);
+            var decryptedChannel = decryptData(parsedJSON[key].channelId);
 
             // If user's input matches a decrypted data, push everything related to a chosen row to list
             if (decryptedUserId === interaction.member.id && (decryptedName.toLowerCase() === nameTarget.toLowerCase() || decryptedCoord === coordTarget)) {
-                list.push(decryptedName, decryptedType, scheduleTime, decryptedSubmit, decryptedExpire, decryptedCoord);
+                list.push(decryptedName, decryptedType, scheduleTime, decryptedSubmit, decryptedExpire, decryptedCoord, decryptedDM, decryptedChannel, decryptedServerId);
             }
         }
 
         if ((list[0] != null && list[3] != null) || list[0] != null) {
-            message = "`" + list[0] + "` " + `${list[1]} is expiring in <t:${list[4]}:R>, you will be reminded <t:${list[2]}:R>`;
+            if (list[6] === 'false') {
+                message = "`" + list[0] + "` " + `${list[1]} is expiring in <t:${list[4]}:R>, you will be reminded <t:${list[2]}:R> in https://discord.com/channels/${list[8]}/${list[7]}`;
+            }
+            else if (list[6] === 'true') {
+                message = "`" + list[0] + "` " + `${list[1]} is expiring in <t:${list[4]}:R>, you will be reminded <t:${list[2]}:R> in your DM.`;
+            }
         }
         else {
             if (coordTarget && nameTarget) {
