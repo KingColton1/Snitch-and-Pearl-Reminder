@@ -19,13 +19,12 @@ async function connectDatabase() {
             dialect: storageType,
             logging: false
         })
+        createDatabase(dbConn);
     }
-
-    await createDatabase(dbConn);
     await createTemplateTable(dbConn);
 }
 
-async function createDatabase(dbConn) {
+function createDatabase(dbConn) {
     if (storageType.toLowerCase() === 'mysql' || storageType.toLowerCase() === 'mariadb') {
         return dbConn.query(`CREATE DATABASE IF NOT EXISTS ${dbDatabase};`);
     }
