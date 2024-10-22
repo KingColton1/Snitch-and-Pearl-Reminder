@@ -29,11 +29,11 @@ async function createTemplateTable(dbConn) {
     // Same as "CREATE TABLE" command
     userReminderTable = dbConn.define('UserReminders', {
         userId: {
-            type: sequelize.INTEGER,
+            type: sequelize.STRING,
             allowNull: false
         },
         serverId: {
-            type: sequelize.INTEGER,
+            type: sequelize.STRING,
             allowNull: false
         },
         typeName: sequelize.STRING,
@@ -41,14 +41,14 @@ async function createTemplateTable(dbConn) {
         namelayerName: sequelize.STRING,
         coordinate: sequelize.STRING,
         schedule: sequelize.STRING,
-        isDMEnabled: sequelize.BOOLEAN,
-        channelId: sequelize.INTEGER,
+        isDMEnabled: sequelize.STRING,
+        channelId: sequelize.STRING,
         submissionTimestamp: {
-            type: sequelize.INTEGER,
+            type: sequelize.STRING,
             defaultValue: 0
         },
         expirationTimestamp: {
-            type: sequelize.INTEGER,
+            type: sequelize.STRING,
             defaultValue: 0
         }
     });

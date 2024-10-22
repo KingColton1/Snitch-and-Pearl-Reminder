@@ -27,7 +27,7 @@ If you are using one of Discord Bot hosting services (such as BisectHosting and 
 # Inviting and using my bot
 If you don't want to self host and instead use my bot, you may use that at the expense of using my database I host.
 
-1. <[Click here to invite Discord Bot](https://discord.com/oauth2/authorize?client_id=1298235484484538449&permissions=277025475584&integration_type=0&scope=bot)>.
+1. [Click here to invite Discord Bot](https://discord.com/oauth2/authorize?client_id=1298235484484538449&permissions=277025475584&integration_type=0&scope=bot).
 2. Set up necessary permission and channel permission you want my bot to see and post. Alternately you can make it so your bot DM you to remind you.
 3. If you plan to index everything in your snitch channel, run `/indexsnitch <channel name>`. It will automatically add everything based on snitches' coordinates (every snitch coordinates are unique), they all are assigned to you and a associated namelayer.
 4. If you include both jukebox and noteblock in the same snitch channel, you need to assign some of them to a appropriate label so the bot can correctly calculate your snitch's time before deactivatation.
