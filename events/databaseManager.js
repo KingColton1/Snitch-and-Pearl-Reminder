@@ -33,7 +33,7 @@ async function createDatabase(dbConn) {
         return dbConn.query(`IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '${dbDatabase}') BEGIN CREATE DATABASE ${dbDatabase}; END; GO`);
     }
     else if (storageType.toLowerCase() === 'postgres') {
-        return dbConn.query(`SELECT 'CREATE DATABASE ${dbDatabase}' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${dbDatabase}')\gexec`);
+        return dbConn.query(`SELECT 'CREATE DATABASE ${dbDatabase}' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${dbDatabase}')\\gexec`);
     }
 }
 
