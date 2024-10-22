@@ -14,13 +14,17 @@ Also, this bot requires **presence intent**, **server members intent**, and **me
 2. Run `git clone https://github.com/KingColton1/Snitch-and-Pearl-Reminder.git` to clone this repo into your server.
 3. Run `npm install` to install required packages and dependencies.
 4. Rename `.env.example` to `.env` and input necessary information in `.env` in order to run this bot.
-5. Run `node index.js`
+5. If you choose Postgres, MySQL, MariaDB, or MSSQL as your storage type, create a new database and user then add name of a database and a user to `.env`.
+6. Run `node index.js`
 
 If you are using [Pterodactyl](https://pterodactyl.io/), [Pelican](https://pelican.dev/), [AMP](https://cubecoders.com/AMP), or other server management softwares that support running NodeJS, follow this:
 1. Put `https://github.com/KingColton1/Snitch-and-Pearl-Reminder.git` in Git Repo Address.
 2. Put `master` in Install Branch.
 3. Put `index.js` in Main File.
 4. Optionally you can turn on auto-update to receive automatic update for fixes or improvement. Otherwise don't turn on auto-update.
+5. Rename `.env.example` to `.env` and input necessary information in `.env` in order to run this bot.
+6. If you choose Postgres, MySQL, MariaDB, or MSSQL as your storage type, create a new database and user then add name of a database and a user to `.env`.
+7. Start your bot.
 
 If you are using one of Discord Bot hosting services (such as BisectHosting and PebbleHost), this is the same steps as the server management software steps (just above).
 
