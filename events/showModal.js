@@ -35,29 +35,31 @@ module.exports = {
             catch(err){}
 
             // Add this section to check for limits
-            const timeValue = newSchedule.match(/^(\d+)\s?(second|seconds|sec|secs|minute|minutes|min|mins|day|days|hour|hours|week|weeks)$/i);
-            if (timeValue) {
-                const quantity = parseInt(timeValue[1]);
-                const unit = timeValue[2].toLowerCase();
+            if (newSchedule) {
+                const timeValue = newSchedule.match(/^(\d+)\s?(second|seconds|sec|secs|minute|minutes|min|mins|day|days|hour|hours|week|weeks)$/i);
+                if (timeValue) {
+                    const quantity = parseInt(timeValue[1]);
+                    const unit = timeValue[2].toLowerCase();
 
-                // Check limits
-                if ((unit === 'week' || unit === 'weeks') && quantity > 1) {
-                    return await interaction.reply({ content: 'Schedule time cannot exceed 1 week.', ephemeral: true });
-                }
-                if ((unit === 'day' || unit === 'days') && quantity > 6) {
-                    return await interaction.reply({ content: 'Schedule time cannot exceed 6 days. Consider using week (7 days).', ephemeral: true });
-                }
-                if ((unit === 'hour' || unit === 'hours') && quantity > 24) {
-                    return await interaction.reply({ content: 'Schedule time cannot exceed 24 hours. Consider using days or week.', ephemeral: true });
-                }
-                if ((unit === 'week' || unit === 'weeks') && quantity < 1) {
-                    return await interaction.reply({ content: 'Schedule time cannot go under 1 week. Consider using days or hours.', ephemeral: true });
-                }
-                if ((unit === 'day' || unit === 'days') && quantity < 1) {
-                    return await interaction.reply({ content: 'Schedule time cannot go under 1 day. Consider using hours.', ephemeral: true });
-                }
-                if ((unit === 'hour' || unit === 'hours') && quantity < 1 || (unit === 'second' || unit === 'seconds' || unit === 'sec' || unit === 'secs' || unit === 'minute' || unit === 'minutes' || unit === 'min' || unit === 'mins')) {
-                    return await interaction.reply({ content: 'Schedule time cannot go under 1 hour.', ephemeral: true });
+                    // Check limits
+                    if ((unit === 'week' || unit === 'weeks') && quantity > 1) {
+                        return await interaction.reply({ content: 'Schedule time cannot exceed 1 week.', ephemeral: true });
+                    }
+                    if ((unit === 'day' || unit === 'days') && quantity > 6) {
+                        return await interaction.reply({ content: 'Schedule time cannot exceed 6 days. Consider using week (7 days).', ephemeral: true });
+                    }
+                    if ((unit === 'hour' || unit === 'hours') && quantity > 24) {
+                        return await interaction.reply({ content: 'Schedule time cannot exceed 24 hours. Consider using days or week.', ephemeral: true });
+                    }
+                    if ((unit === 'week' || unit === 'weeks') && quantity < 1) {
+                        return await interaction.reply({ content: 'Schedule time cannot go under 1 week. Consider using days or hours.', ephemeral: true });
+                    }
+                    if ((unit === 'day' || unit === 'days') && quantity < 1) {
+                        return await interaction.reply({ content: 'Schedule time cannot go under 1 day. Consider using hours.', ephemeral: true });
+                    }
+                    if ((unit === 'hour' || unit === 'hours') && quantity < 1 || (unit === 'second' || unit === 'seconds' || unit === 'sec' || unit === 'secs' || unit === 'minute' || unit === 'minutes' || unit === 'min' || unit === 'mins')) {
+                        return await interaction.reply({ content: 'Schedule time cannot go under 1 hour.', ephemeral: true });
+                    }
                 }
             }
 

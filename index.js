@@ -4,6 +4,7 @@ const cron = require('node-cron');
 const { Client, Collection, Events, GatewayIntentBits, REST, Routes } = require('discord.js');
 const { discordToken, discordClientId } = require('./libs/config.js');
 const { remindEvent } = require('./events/remindEvent.js');
+const { sendCrashNotice, resetCrashNoticeFlag } = require('./events/crashHandler.js');
 
 const client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.DirectMessages, GatewayIntentBits.DirectMessageReactions]});
 
@@ -55,7 +56,23 @@ const rest = new REST().setToken(discordToken);
     }
 })();
 
-client.login(discordToken);
+client.login(discordToken).then(() => {
+    resetCrashNoticeFlag();
+});
+
+// Handling uncaught exceptions (sync code errors)
+process.on('uncaughtException', async (error) => {
+    console.error('Uncaught Exception:', error);
+    await sendCrashNotice(client, error.message);
+    process.exit(1);
+});
+
+// Handling unhandled promise rejections (async code errors)
+process.on('unhandledRejection', async (reason, promise) => {
+    console.error('Unhandled Rejection:', promise, 'reason:', reason);
+    await sendCrashNotice(client, reason.message || reason);
+    process.exit(1);
+});
 
 // Run interval, passing client information
 cron.schedule('* * * * *', async () => {

@@ -1,19 +1,25 @@
-const { listAllRows } = require(`../events/databaseManager.js`);
+const { listAllRows } = require('../events/databaseManager.js');
 const { decryptData } = require('../libs/encryption.js');
 const CacheManager = require('../libs/cacheManager.js');
 
-// IDEA 1: If bot is about to crash, immediately DM everyone who are attached to the bot's database stating that bot is crashed and need to be rebooted manually by the bot host.
-
 // Function to dynamically schedule reminders
-async function scheduleReminder(client, reminderKey, userId, message, delay) {
+async function scheduleReminder(client, reminderKey, userId, message, delay, channelId) {
     if (CacheManager.isTimeoutActive(reminderKey)) {
         return;
     }
-
+    
     const timeoutId = setTimeout(async () => {
-        const user = await client.users.fetch(userId).catch(() => null);
-        if (user) {
-            user.send({ content: message });
+        if (channelId) {
+            const channel = await client.channels.fetch(channelId.id).catch(() => null);
+            if (channel) {
+                channel.send({ content: message });
+            }
+        }
+        else {
+            const user = await client.users.fetch(userId).catch(() => null);
+            if (user) {
+                user.send({ content: message });
+            }
         }
         CacheManager.removeTimeout(reminderKey);
         CacheManager.removeReminder(reminderKey);
@@ -36,7 +42,7 @@ async function messageContent(client, reminderKey, userId, itemName, namelayerNa
         await scheduleReminder(client, reminderKey, userId, message, timeUntilReminder);
     }
     else if (isDMEnabled === 'false' || isDMEnabled === false) {
-        // TODO 3: send to a channel assigned by a user
+        await scheduleReminder(client, reminderKey, userId, message, timeUntilReminder, channelTarget);
     }
 }
 
@@ -49,8 +55,6 @@ async function remindEvent(client) {
 
         // If the reminder is still valid, skip database lookup
         if (CacheManager.isReminderValid(expireTime)) {
-            //console.log('Reminder is cached and valid.');
-
             if (scheduleTime > currentTime && expireTime > currentTime) {
                 const timeUntilReminder = scheduleTime - currentTime;
                 await messageContent(client, reminderKey, userId, itemName, namelayerName, typeName, coordinate, expireTime, isDMEnabled, channelTarget, timeUntilReminder);
@@ -75,7 +79,7 @@ async function remindEvent(client) {
         var expireTime = decryptData(parsedJSON[row].expirationTimestamp) || 0;
         var scheduleTime = decryptData(parsedJSON[row].schedule) || 0;
         var isDMEnabled = decryptData(parsedJSON[row].isDMEnabled) || true;
-        var channelTarget = decryptData(parsedJSON[row].channelTarget) || 0;
+        var channelTarget = decryptData(parsedJSON[row].channelId) || 0;
 
         const reminderKey = `${parsedJSON[row].userId}-${parsedJSON[row].itemName}`;
 

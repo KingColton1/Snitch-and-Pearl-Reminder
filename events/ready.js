@@ -26,7 +26,7 @@ module.exports = {
             var expireTime = decryptData(row.expirationTimestamp) || 0;
             var scheduleTime = decryptData(row.schedule) || 0;
             var isDMEnabled = decryptData(row.isDMEnabled) || true;
-            var channelTarget = decryptData(row.channelTarget) || 0;
+            var channelTarget = decryptData(row.channelId) || 0;
 
             const reminderKey = `${row.userId}-${row.itemName}`;
 

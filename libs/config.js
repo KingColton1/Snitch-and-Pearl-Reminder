@@ -4,6 +4,7 @@ dotenv.config('./.env');
 module.exports = {
     discordToken: process.env.TOKEN,
     discordClientId: process.env.CLIENT,
+    hostUserId: process.env.HOST_USERID,
     storageType: process.env.STORAGE_TYPE,
     dbDatabase: process.env.DB_DATABASE,
     dbHost: process.env.DB_HOST,
