@@ -10,7 +10,7 @@ async function scheduleReminder(client, reminderKey, userId, message, delay, cha
     
     const timeoutId = setTimeout(async () => {
         if (channelId) {
-            const channel = await client.channels.fetch(channelId.id).catch(() => null);
+            const channel = await client.channels.fetch(channelId).catch(() => null);
             if (channel) {
                 channel.send({ content: message });
             }

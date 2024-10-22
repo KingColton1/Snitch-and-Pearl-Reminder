@@ -1,7 +1,7 @@
 const { Events } = require('discord.js');
 const { listAllRows, updateRow } = require(`./databaseManager.js`);
 const { encryptData, decryptData } = require('../libs/encryption.js');
-const { timeConverter, calculateSchedule } = require('../libs/timeConverter.js');
+const { timeConverter, calculateSchedule, reverseSchedule } = require('../libs/timeConverter.js');
 const CacheManager = require('../libs/cacheManager.js');
 const TempStorage = require('../libs/tempStorage.js');
 
@@ -70,6 +70,7 @@ module.exports = {
             for (const key in parsedJSON) {
                 var decryptedUserId = decryptData(parsedJSON[key].userId);
                 var decryptedExpire = decryptData(parsedJSON[key].expirationTimestamp);
+                var decryptedSchedule = decryptData(parsedJSON[key].schedule);
 
                 if (decryptedUserId === interaction.member.id && reminderData.userId === parsedJSON[key].userId) {
                     if (newSchedule && newExpiration) {
@@ -77,6 +78,9 @@ module.exports = {
                     }
                     else if (newSchedule) {
                         newSchedule = await calculateSchedule(newSchedule, decryptedExpire);
+                    }
+                    else if (newExpiration) {
+                        newSchedule = await calculateSchedule(reverseSchedule(decryptedSchedule, decryptedExpire), newExpiration);
                     }
 
                     result = await updateRow(parsedJSON[key].userId, encryptData(newName), encryptData(newCoordinates), encryptData(newNL), encryptData(newSchedule), encryptData(newExpiration));

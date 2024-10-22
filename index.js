@@ -4,7 +4,7 @@ const cron = require('node-cron');
 const { Client, Collection, Events, GatewayIntentBits, REST, Routes } = require('discord.js');
 const { discordToken, discordClientId } = require('./libs/config.js');
 const { remindEvent } = require('./events/remindEvent.js');
-const { sendCrashNotice, resetCrashNoticeFlag } = require('./events/crashHandler.js');
+const { sendCrashNotice } = require('./events/crashHandler.js');
 
 const client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.DirectMessages, GatewayIntentBits.DirectMessageReactions]});
 
@@ -56,9 +56,7 @@ const rest = new REST().setToken(discordToken);
     }
 })();
 
-client.login(discordToken).then(() => {
-    resetCrashNoticeFlag();
-});
+client.login(discordToken);
 
 // Handling uncaught exceptions (sync code errors)
 process.on('uncaughtException', async (error) => {

@@ -158,7 +158,7 @@ module.exports = {
         var encryptedCoord = encryptData(coordTarget);
         var encryptedSchedule = encryptData(scheduleTarget);
         var encryptedDM = encryptData(dmTarget);
-        var encryptedChannel = encryptData(channelTarget);
+        var encryptedChannel = encryptData(channelTarget.id);
         var encryptedExpire = encryptData(expirationTarget);
         var encryptedSubmit = encryptData(submissionTimestamp);
 
