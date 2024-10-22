@@ -19,21 +19,8 @@ async function connectDatabase() {
             dialect: storageType,
             logging: false
         })
-        createDatabase(dbConn);
     }
     await createTemplateTable(dbConn);
-}
-
-function createDatabase(dbConn) {
-    if (storageType.toLowerCase() === 'mysql' || storageType.toLowerCase() === 'mariadb') {
-        return dbConn.query(`CREATE DATABASE IF NOT EXISTS ${dbDatabase};`);
-    }
-    else if (storageType.toLowerCase() === 'mssql') {
-        return dbConn.query(`IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '${dbDatabase}') BEGIN CREATE DATABASE ${dbDatabase}; END; GO`);
-    }
-    else if (storageType.toLowerCase() === 'postgres') {
-        return dbConn.query(`SELECT 'CREATE DATABASE ${dbDatabase} GRANT ALL ON DATABASE ${dbDatabase} TO ${dbUser};' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${dbDatabase}')`);
-    }
 }
 
 async function createTemplateTable(dbConn) {
