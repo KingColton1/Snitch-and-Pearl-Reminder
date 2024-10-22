@@ -45,8 +45,7 @@ const rest = new REST().setToken(discordToken);
         console.log(`Started refreshing ${cachedCommands.length} application (/) commands.`);
 
         const data = await rest.put(
-            Routes.applicationGuildCommands(discordClientId, "1258246620383023145"),
-            //Routes.applicationCommands(discordClientId),
+            Routes.applicationCommands(discordClientId),
             {body: cachedCommands}
         );
 

@@ -150,8 +150,14 @@ module.exports = {
         }
 
         // Encrypt inputs
-        var encryptedUserId = encryptData(interaction.member.user.id);
-        var encryptedServerId = encryptData(interaction.guild.id);
+        var encryptedUserId = encryptData(interaction.user.id);
+        var encryptedServerId = null;
+        if (!interaction.guild) {
+            encryptedServerId = encryptData(0);
+        }
+        else {
+            encryptedServerId = encryptData(interaction.guild.id);
+        }
         var encryptedType = encryptData(typeTarget);
         var encryptedName = encryptData(nameTarget);
         var encryptedNL = encryptData(namelayerTarget);

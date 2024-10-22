@@ -112,7 +112,7 @@ module.exports = {
             var coordinate = decryptData(row.coordinate) || '0,0,0';
             var namelayerName = decryptData(row.namelayerName) || 'undefined';
 
-            if (userId === interaction.member.id) {
+            if (userId === interaction.user.id) {
                 if (interaction.options.getSubcommand() === 'snitch') {
                     if (itemName.toLowerCase() === nameTarget.toLowerCase() && coordinate === coordTarget ) {
                         console.log("Trying to delete a snitch reminder...");

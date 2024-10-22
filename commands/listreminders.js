@@ -60,7 +60,7 @@ module.exports = {
             var decryptedNL = decryptData(parsedJSON[key].namelayerName);
             var decryptedCoord = decryptData(parsedJSON[key].coordinate);
             
-            if (decryptedUserId === interaction.member.id) {
+            if (decryptedUserId === interaction.user.id) {
                 if (interaction.options.getSubcommand() === 'snitch') {
                     if (namelayerTarget !== '' && namelayerTarget !== null) {
                         if (namelayerTarget.toLowerCase() === decryptedNL.toLowerCase()) {

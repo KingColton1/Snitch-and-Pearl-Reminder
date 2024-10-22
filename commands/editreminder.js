@@ -54,12 +54,12 @@ module.exports = {
             var decryptedNL = decryptData(parsedJSON[key].namelayerName);
             var decryptedCoord = decryptData(parsedJSON[key].coordinate);
 
-            if (decryptedUserId === interaction.member.id && decryptedName.toLowerCase() === nameTarget.toLowerCase() && interaction.options.getSubcommand() === 'pearl' && decryptedType === 'pearl') {
+            if (decryptedUserId === interaction.user.id && decryptedName.toLowerCase() === nameTarget.toLowerCase() && interaction.options.getSubcommand() === 'pearl' && decryptedType === 'pearl') {
                 selectedUserId = parsedJSON[key].userId;
                 selectedName = parsedJSON[key].itemName;
                 list.push(decryptedName, scheduleTime, decryptedExpire);
             }
-            else if (decryptedUserId === interaction.member.id && decryptedName.toLowerCase() === nameTarget.toLowerCase() && decryptedCoord === coordTarget && interaction.options.getSubcommand() === 'snitch' && decryptedType === 'snitch') {
+            else if (decryptedUserId === interaction.user.id && decryptedName.toLowerCase() === nameTarget.toLowerCase() && decryptedCoord === coordTarget && interaction.options.getSubcommand() === 'snitch' && decryptedType === 'snitch') {
                 selectedUserId = parsedJSON[key].userId;
                 selectedName = parsedJSON[key].itemName;
                 list.push(decryptedName, scheduleTime, decryptedExpire, decryptedNL, decryptedCoord);

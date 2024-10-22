@@ -11,7 +11,8 @@ module.exports = {
             option.setName('channel')
             .setDescription('Choose a snitch channel you want this bot to index')
             .setRequired(true)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction) {
         const channelTarget = interaction.options.getChannel('channel');
         const snitchRegex = /`\[(\d{2}:\d{2}:\d{2})\]`\s`\[(.+?)\]`\s\*\*(.+?)\*\*\sis\sat\s(.*?)\s\(([-\d]+),([-\d]+),([-\d]+)\)/;
@@ -72,7 +73,7 @@ module.exports = {
                         var newSnitchName = snitchName.trim() ? snitchName : `${namelayerName}-${unnamedSnitchCount++}`;
 
                         // Encrypt inputs
-                        var encryptedUserId = encryptData(interaction.member.user.id);
+                        var encryptedUserId = encryptData(interaction.user.id);
                         var encryptedServerId = encryptData(interaction.guild.id);
                         var encryptedType = encryptData('snitch');
                         var encryptedName = encryptData(newSnitchName);

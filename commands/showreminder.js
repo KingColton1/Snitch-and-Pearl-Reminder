@@ -38,17 +38,17 @@ module.exports = {
             var decryptedChannel = decryptData(parsedJSON[key].channelId);
 
             // If user's input matches a decrypted data, push everything related to a chosen row to list
-            if (decryptedUserId === interaction.member.id && (decryptedName.toLowerCase() === nameTarget.toLowerCase() || decryptedCoord === coordTarget)) {
+            if (decryptedUserId === interaction.user.id && (decryptedName.toLowerCase() === nameTarget.toLowerCase() || decryptedCoord === coordTarget)) {
                 list.push(decryptedName, decryptedType, scheduleTime, decryptedSubmit, decryptedExpire, decryptedCoord, decryptedDM, decryptedChannel, decryptedServerId);
             }
         }
 
         if ((list[0] != null && list[3] != null) || list[0] != null) {
             if (list[6] === 'false') {
-                message = "`" + list[0] + "` " + `${list[1]} is expiring in <t:${list[4]}:R>, you will be reminded <t:${list[2]}:R> in https://discord.com/channels/${list[8]}/${list[7]}`;
+                message = "`" + list[0] + "` " + `${list[1]}${list[1] === 'snitch' ? ` at coordinates ${list[5]}` : ''} is expiring in <t:${list[4]}:R>, you will be reminded <t:${list[2]}:R> in https://discord.com/channels/${list[8]}/${list[7]}`;
             }
             else if (list[6] === 'true') {
-                message = "`" + list[0] + "` " + `${list[1]} is expiring in <t:${list[4]}:R>, you will be reminded <t:${list[2]}:R> in your DM.`;
+                message = "`" + list[0] + "` " + `${list[1]}${list[1] === 'snitch' ? ` at coordinates ${list[5]}` : ''} is expiring in <t:${list[4]}:R>, you will be reminded <t:${list[2]}:R> in your DM.`;
             }
         }
         else {

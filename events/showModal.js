@@ -72,7 +72,7 @@ module.exports = {
                 var decryptedExpire = decryptData(parsedJSON[key].expirationTimestamp);
                 var decryptedSchedule = decryptData(parsedJSON[key].schedule);
 
-                if (decryptedUserId === interaction.member.id && reminderData.userId === parsedJSON[key].userId) {
+                if (decryptedUserId === interaction.user.id && reminderData.userId === parsedJSON[key].userId) {
                     if (newSchedule && newExpiration) {
                         newSchedule = await calculateSchedule(newSchedule, newExpiration);
                     }
