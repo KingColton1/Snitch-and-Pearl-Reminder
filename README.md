@@ -4,6 +4,10 @@ Snitch and Pearl Reminder Bot, or simply Reminder Bot is a self hostable bot des
 
 This bot designed for any Civ servers such as CivMC that is using mainline's pearl and snitch plugins. Probably work for spin-off Civ servers like Civ+.
 
+**Note:** Expiration Date defines the day of a snitch's deactivation or running out of a pearl's fuel.
+
+For more information, please refer to [the wiki](https://github.com/KingColton1/Snitch-and-Pearl-Reminder/wiki).
+
 # Self Host Instruction
 This bot requires two things; a server (can be your own computer, a virtual private server, or dedicated server) and a database if you prefer Postgres, MySQL, MariaDB, or MSSQL. However if you prefer SQLite over other databases, you do not need to host your own database.
 
@@ -34,7 +38,7 @@ If you don't want to self host and instead use my bot, you may use that at the e
 1. [Click here to invite Discord Bot](https://discord.com/oauth2/authorize?client_id=1298235484484538449&permissions=277025475584&integration_type=0&scope=bot).
 2. Set up necessary permission and channel permission you want my bot to see and post. Alternately you can make it so your bot DM you to remind you.
 3. If you plan to index everything in your snitch channel, run `/indexsnitch <channel name>`. It will automatically add everything based on snitches' coordinates (every snitch coordinates are unique), they all are assigned to you and a associated namelayer.
-4. If you include both jukebox and noteblock in the same snitch channel, you need to assign some of them to a appropriate label so the bot can correctly calculate your snitch's time before deactivatation.
+3a. If you include both jukebox and noteblock in the same snitch channel and namelayer when you run the `/indexsnitch` command, you need to modify jukebox (assuming you set up a small number of jukeboxes) to change the expiration date as well as the name of it so the bot can correctly remind you before the jukeboxes' expiration dates. The command to modify a snitch reminder is `/editreminder snitch <name> <coordinate>`.
 
 # Data Privacy
 All data in any database (either hosted by me or you) are encrypted to protect users' privacy because it contains snitchs' coordinate, pearl time, server ID, and user ID. This security feature is included in self host version as well as my bot I host myself. You may check out how encryption work in [./libs/encrpytion.js](https://github.com/KingColton1/Snitch-and-Pearl-Reminder/blob/main/libs/encryption.js).
