@@ -20,6 +20,7 @@ Also, this bot requires **presence intent**, **server members intent**, and **me
 4. Rename `.env.example` to `.env` and input necessary information in `.env` in order to run this bot.
 5. If you choose Postgres, MySQL, MariaDB, or MSSQL as your storage type, create a new database and user and add the names of the database and user to `.env`.
 6. Run `node index.js`
+7. Start adding your reminds.
 
 If you are using [Pterodactyl](https://pterodactyl.io/), [Pelican](https://pelican.dev/), [AMP](https://cubecoders.com/AMP), or other server management softwares that support running NodeJS, follow this:
 1. Put `https://github.com/KingColton1/Snitch-and-Pearl-Reminder.git` in Git Repo Address.
@@ -29,16 +30,22 @@ If you are using [Pterodactyl](https://pterodactyl.io/), [Pelican](https://pelic
 5. Rename `.env.example` to `.env` and input necessary information in `.env` in order to run this bot.
 6. If you choose Postgres, MySQL, MariaDB, or MSSQL as your storage type, create a new database and user and add the names of the database and user to `.env`.
 7. Start your bot.
+8. Start adding your reminds.
 
 If you are using one of Discord Bot hosting services (such as BisectHosting and PebbleHost), these are the same steps as the server management software steps (just above).
 
-# Inviting and using my bot
+# Inviting my bot
 If you don't want to self-host and instead use my bot, you may use that at the expense of using the database I host.
 
 1. [Click here to invite Discord Bot](https://discord.com/oauth2/authorize?client_id=1298235484484538449&permissions=277025475584&integration_type=0&scope=bot).
 2. Set up the necessary channel permissions for the bot to see and post. Alternatively, your bot can DM you to remind you.
-3. If you plan to index everything in your snitch channel, run `/indexsnitch <channel name>`. It will automatically add everything based on snitches' coordinates (every snitch's coordinates are unique); they all are assigned to you and an associated namelayer.
-4. If you include both jukebox and noteblock in the same snitch channel and namelayer when you run the `/indexsnitch` command, you need to modify jukebox (assuming you set up a small number of jukeboxes) to change the expiration date as well as the name of it so the bot can correctly remind you before the jukeboxes' expiration dates. The command to modify a snitch reminder is `/editreminder snitch <name> <coordinate>`.
+3. Start adding your reminds.
+
+### Notes
+- If you plan to index everything in your snitch channel, run `/indexsnitch <channel name>`. It will automatically add everything based on snitches' coordinates (every snitch's coordinates are unique); they all are assigned to you and an associated namelayer.
+-  If you include both jukebox and noteblock in the same snitch channel and namelayer when you run the `/indexsnitch` command, you need to modify jukebox (assuming you set up a small number of jukeboxes) to change the expiration date as well as the name of it so the bot can correctly remind you before the jukeboxes' expiration dates. The command to modify a snitch reminder is `/editreminder snitch <name> <coordinate>`.
+
+[Click here for more information about commands.](https://github.com/KingColton1/Snitch-and-Pearl-Reminder/wiki)
 
 # Data Privacy
 All data in any database (hosted by me or you) are encrypted to protect users' privacy because it contains snitch's coordinates, pearl time, server ID, and user ID. This security feature is included in the self-host version and the bot I host. You may check out how encryption works in [./libs/encrpytion.js](https://github.com/KingColton1/Snitch-and-Pearl-Reminder/blob/main/libs/encryption.js).
