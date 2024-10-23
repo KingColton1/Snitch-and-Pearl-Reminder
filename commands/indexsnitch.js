@@ -20,6 +20,11 @@ module.exports = {
         var unnamedSnitchCount = 1;
         var totalIndexed = 0;
 
+        await interaction.reply({
+            content: `Now indexing all snitches in ${channelTarget}`,
+            ephemeral: true
+        });
+
         // Delay helper function to add a pause between fetches
         async function delay(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
@@ -112,7 +117,7 @@ module.exports = {
         }
 
         // Reply with the result of indexing
-        await interaction.reply({
+        return await interaction.followUp({
             content: message,
             ephemeral: true
         });

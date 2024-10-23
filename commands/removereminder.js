@@ -115,7 +115,6 @@ module.exports = {
             if (userId === interaction.user.id) {
                 if (interaction.options.getSubcommand() === 'snitch') {
                     if (itemName.toLowerCase() === nameTarget.toLowerCase() && coordinate === coordTarget ) {
-                        console.log("Trying to delete a snitch reminder...");
                         chosenName = itemName;
                         chosenCoord = coordinate;
                         isSuccess = deleteRow(null, row.coordinate, null, null);
@@ -126,7 +125,6 @@ module.exports = {
                 }
                 else if (interaction.options.getSubcommand() === 'pearl') {
                     if (itemName.toLowerCase() === nameTarget.toLowerCase()) {
-                        console.log("Trying to delete a pearl reminder...");
                         chosenName = itemName;
                         isSuccess = deleteRow(row.itemName, null, null, null);
                         CacheManager.removeTimeout(`${row.userId}-${row.itemName}`);
@@ -136,7 +134,6 @@ module.exports = {
                 }
                 else if (interaction.options.getSubcommand() === 'bulk') {
                     if (namelayerName.toLowerCase() === namelayerTarget.toLowerCase()) {
-                        console.log(`Trying to delete all reminders associated to ${namelayerName}...`);
                         chosenName = itemName;
                         isSuccess = deleteRow(null, null, null, row.namelayerName);
                         CacheManager.removeTimeout(`${row.userId}-${row.itemName}`);
