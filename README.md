@@ -42,3 +42,9 @@ If you don't want to self host and instead use my bot, you may use that at the e
 
 # Data Privacy
 All data in any database (either hosted by me or you) are encrypted to protect users' privacy because it contains snitchs' coordinate, pearl time, server ID, and user ID. This security feature is included in self host version as well as my bot I host myself. You may check out how encryption work in [./libs/encrpytion.js](https://github.com/KingColton1/Snitch-and-Pearl-Reminder/blob/main/libs/encryption.js).
+
+# Contributions
+Any contributions to this repo is greatly appreciated as I've been constantly improving to make this bot better. The goal is to make a reliable Civ Reminder bot that help us to keep our snitches and pearls maintained. Please first open pull request and I will review them before I approve and merge. Some rules are expected to follow;
+- Do not massively modify databaseManager.js unless you figured out a way to automatically create a new database for all 4 databases other than SQLite
+- Do not modify encryption.js unless you provide a valid reason that can legitimately improve security.
+- Factoring and optimizing codes to improve performances are OK and should not dramatically change the way civ reminder bot work unless that is absolutely necessary.
